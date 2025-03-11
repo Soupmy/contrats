@@ -1,0 +1,64 @@
+<div id="sidebar" class="sidebar">
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <ul>
+        <li>
+            <a href="#" data-title="Tableau de bord">
+                <span class="icon">📊</span>
+                <span class="link-text">Tableau de bord</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-title="Contrats">
+                <span class="icon">📝</span>
+                <span class="link-text">Contrats</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-title="Fournisseurs">
+                <span class="icon">🏢</span>
+                <span class="link-text">Fournisseurs</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-title="Blacklists">
+                <span class="icon">⛔</span>
+                <span class="link-text">Blacklists</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-title="Paramètres">
+                <span class="icon">⚙️</span>
+                <span class="link-text">Paramètres</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.body;
+
+    sidebar.classList.toggle('collapsed');
+    body.classList.toggle('sidebar-expanded');
+
+    // On sauvegarde l'état dans localStorage pour le conserver entre les pages
+    const isCollapsed = sidebar.classList.contains('collapsed');
+    localStorage.setItem('sidebarCollapsed', isCollapsed);
+}
+
+// Au chargement de la page, on récupère l'état sauvegardé
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.body;
+    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+    if (isCollapsed) {
+        sidebar.classList.add('collapsed');
+        body.classList.remove('sidebar-expanded');
+    } else {
+        sidebar.classList.remove('collapsed');
+        body.classList.add('sidebar-expanded');
+    }
+});
+</script>
