@@ -40,6 +40,9 @@ INSTALLED_APPS = [
 
 # Mon app
     'contracts',
+    'fournisseurs',
+    'evaluations',
+    'accounts',
 ]
 
 MIDDLEWARE = [
