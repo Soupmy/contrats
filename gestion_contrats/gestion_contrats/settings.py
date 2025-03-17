@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-# Mon app
-    'contracts',
-    'fournisseurs',
-    'evaluations',
-    'accounts',
+# Mes apps
+    'contracts', #contient les contrats
+    'fournisseurs', #contient fournisseurs et blacklisting
+    'evaluations', #contient les evals des contrats
+    'accounts', #gestion des comptes avec django + liaison a unité
+    'dashboard', # tableau de bord
 ]
 
 MIDDLEWARE = [

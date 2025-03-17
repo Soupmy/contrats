@@ -1,12 +1,11 @@
-# contrats
-crée un nouveau user dans ta orclpdb
-nomme le django_user avec le mot de passe de ton choix (si tu gardes le meme que le mien t'auras rien a modifier)
-fait une migration pour activer les models et créer tes tables
-n'oublie pas de connecter toad a django_user
+# modif bdd
+migration faisable (dire oui lors qu'on te demande de changer la date truc)
+chaque modele est dans sa bonne app
 
-normalement tout marchera bien directement 
+pour l'app dashboard logiquement elle n'aura aucune table mais aura acces a toutes les autres, je pense que pour pouvoir y acceder il suffit de les importer dans odels et les "activer" dans admin.py de l'app.
 
-pour l'instant y'a qu'une page home avec hello world mais je vais commmit plus tard
+je viens de me rendre compte que j'avais pas vérifié les models de accounts et leur admin si tu veux le faire ma n9olch lala (ma tsiyich tkassar rassek bezzaf m"ah c'est vraiiiment le dernier truc li nessah9oh)
 
-
-ps: fait attention a etre dans le bon dossier sinon les commandes ne marchent pas (cd gestion_contrats)
+# questions pour la suite
+- est ce qu'on garde l'app evaluations ou on la fusionne avec contrats ?
+- est ce que on garde blacklist dans la meme app que fournisseurs ?

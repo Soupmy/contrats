@@ -8,5 +8,4 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('unite', 'is_employee', 'is_superuser')}),
     )
 
-admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Unite)
