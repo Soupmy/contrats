@@ -19,7 +19,7 @@ class JuridiqueFournisseur(models.Model):
     date_exclusion = models.DateField(blank=True, null=True)
     duree_exclusion = models.CharField(max_length=50, blank=True, null=True)
     date_levee_sanction = models.DateField(blank=True, null=True)
-    etat = models.CharField(max_length=50, choices=ETAT_CHOICES)  # etat du fournisseur blacklisté ou habilité
+    etat = models.CharField(max_length=50, choices=ETAT_CHOICES, default='HABILITE')  # etat du fournisseur blacklisté ou (par défaut habilité)
     type = models.CharField(max_length=50, blank=True, null=True)
     structure_ayant_exclu = models.CharField(max_length=255, blank=True, null=True)
     motifs = models.TextField(blank=True, null=True)
