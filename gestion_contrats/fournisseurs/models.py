@@ -49,6 +49,10 @@ class JuridiqueFournisseur(models.Model):
     compte_bancaire = models.CharField(max_length=20, blank=True, null=True)
     cle_controle_bancaire = models.CharField(max_length=10, blank=True, null=True)
 
+
     def __str__(self):
         return self.nom_du_contractant
+    
+    class Meta:
+        db_table = 'JURIDIQUE_FOURNISSEUR'
     

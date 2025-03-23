@@ -4,5 +4,74 @@
 
 {% block content %}
     <h2>Bienvenue sur la page des fournisseurs</h2>
-    <p>Voici la liste des fournisseurss.</p>
+    <h2>Liste des Fournisseurs</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom du Contractant</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Ville</th>
+                    <th>NIF</th>
+                    <th>Activité</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if fournisseurs %}
+                    {% for fournisseur in fournisseurs %}
+                    <tr>
+                        <td>{{ fournisseur.nom_du_contractant }}</td>
+                        <td>{{ fournisseur.email }}</td>
+                        <td>{{ fournisseur.telephone }}</td>
+                        <td>{{ fournisseur.ville }}</td>
+                        <td>{{ fournisseur.nif }}</td>
+                        <td>{{ fournisseur.activite }}</td>
+                        <td class="actions">
+                            <a href="#" class="btn btn-details">Détails</a>
+                            <a href="#" class="btn btn-modifier">Modifier</a>
+                            <a href="#" class="btn btn-supprimer">Supprimer</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucun fournisseur trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<button id="openPopup" class="btn btn-ajouter">Ajouter un Fournisseur</button>
+
+<!-- Popup pour ajouter un fournisseur -->
+<div id="addSupplierPopup" class="popup">
+    <div class="popup-content">
+        <span class="close">&times;</span>
+        <h2>Ajouter un Fournisseur</h2>
+        <form method="post" action="{% url 'fournisseurs' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-ajouter">Ajouter</button>
+        </form>
+    </div>
+</div>
+<script>
+    // JavaScript pour gérer l'ouverture et la fermeture du popup
+    document.getElementById('openPopup').addEventListener('click', function() {
+        document.getElementById('addSupplierPopup').style.display = 'block';
+    });
+
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('addSupplierPopup').style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('addSupplierPopup')) {
+            document.getElementById('addSupplierPopup').style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}
