@@ -31,7 +31,7 @@
                         <td class="actions">
                             <a href="#" class="btn btn-details" onclick="openDetailsPopup({{ fournisseur.id}})">Détails</a>
                             <a href="#" class="btn btn-modifier" onclick="openEditPopup({{ fournisseur.id }})">Modifier</a>
-                            <a href="#" class="btn btn-supprimer">Supprimer</a>
+                            <a href="#" class="btn btn-supprimer" onclick="openDeletePopup({{ fournisseur.id }})">Supprimer</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -53,6 +53,9 @@
 <!-- Pop-up pour la modification avec script -->
 
 {% include 'fournisseurs/modifier_fournisseur_popup.html' %}
+
+<!-- Popup pour supprimer un fournisseur avec script -->
+{% include 'fournisseurs/supprimer_fournisseur_popup.html' %}
 
 <!-- Popup pour ajouter un fournisseur avec script -->
 {% include 'fournisseurs/ajouter_fournisseur_popup.html' %}

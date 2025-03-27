@@ -24,13 +24,12 @@ def fournisseurs_details(request, fournisseur_id):
 
 
 
-#def supprimer_fournisseur(request, id):
-    fournisseur = get_object_or_404(JuridiqueFournisseur, id=id)
-    if request.method == 'POST':
+def supprimer_fournisseur(request, id):
+    if request.method == 'POST'and request.POST.get('_method') == 'DELETE':
+        fournisseur = get_object_or_404(JuridiqueFournisseur, id=id)
         fournisseur.delete()
-        return redirect('fournisseurs')
-    return render(request, 'fournisseurs/supprimer_fournisseur.html', {'fournisseur': fournisseur})
-
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Requête invalide'})
 
 
 def modifier_fournisseur(request, id):

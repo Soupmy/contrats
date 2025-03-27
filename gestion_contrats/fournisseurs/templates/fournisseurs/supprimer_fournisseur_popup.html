@@ -1,0 +1,52 @@
+<div id="deletePopup" class="popup supp-popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeDeletePopup()">&times;</span>
+        <h2>Supprimer le fournisseur ?</h2>
+        <p>Voulez-vous vraiment supprimer ce fournisseur ? Cette action est irréversible.</p>
+        <form id='deleteForm' method="post">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="DELETE">
+            <div class="confirmation">
+                <button type="button" class="btn btn-neutre" onclick="closeDeletePopup()">Annuler</button>
+                <button type="submit" class="btn btn-supprimer">Supprimer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    let fournisseurIdToDelete = null;
+    function openDeletePopup(fournisseurId) {
+    console.log("Ouverture du popup pour fournisseur ID:", fournisseurId);
+    fournisseurIdToDelete = fournisseurId;
+    document.getElementById('deletePopup').style.display = 'block';
+}
+
+    function closeDeletePopup() {
+        document.getElementById('deletePopup').style.display = 'none';
+    }
+
+    document.getElementById('deleteForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!fournisseurIdToDelete) return;
+
+        fetch(`/fournisseurs/supprimer/${fournisseurIdToDelete}/`, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: '_method=DELETE',
+            })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload(); //recharger la page
+            } else {
+                alert("Erreur los de la suppression. ");
+            }
+        });
+    });
+</script>

@@ -129,6 +129,15 @@ body {
   .btn-supprimer:hover {
     background-color: #c0392b;
   }
+
+  .btn-neutre {
+    background-color: dimgrey;
+    color: white;
+  }
+
+  .btn-neutre:hover {
+    background-color: #333;
+  }
   
   /* Actions */
   .actions {
@@ -221,6 +230,14 @@ body {
     background-color: #27ae60;
 }
 
+/* style pour popup suppression*/
+
+.confirmation {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+}
+
 .close {
     color: #aaa;
     float: right;
@@ -234,6 +251,8 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+
 /*------------------------------------*/
 
 .readonly-field {
