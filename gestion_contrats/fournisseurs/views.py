@@ -35,14 +35,16 @@ def fournisseurs_details(request, fournisseur_id):
 
 def modifier_fournisseur(request, id):
     fournisseur = get_object_or_404(JuridiqueFournisseur, id=id)
-    if request.method == 'POST':
+
+    if request.method == 'POST' and request.POST.get('_method') == 'PUT':
         form = FournisseurForm(request.POST, instance=fournisseur)
         if form.is_valid():
             form.save()
-            return redirect('fournisseurs')
-    else:
-        form = FournisseurForm(instance=fournisseur)
-    return render(request, 'fournisseurs/modifier_fournisseur_popup.html', {'form': form})
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'errors': form.errors})
+
+    form = FournisseurForm(instance=fournisseur)
+    return render(request, 'fournisseurs/modifier_fournisseur_form.html', {'form': form})
 
 
 

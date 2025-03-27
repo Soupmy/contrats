@@ -46,72 +46,27 @@
 </div>
 <button id="openPopup" class="btn btn-ajouter">Ajouter un Fournisseur</button>
 
- <!-- Pop-up pour les détails -->
+ <!-- Pop-up pour les détails avec script-->
 
 {% include 'fournisseurs/details_fournisseur_popup.html' %}
 
-<!-- Pop-up pour la modification -->
-<div id="editPopup" class="popup">
-    <div class="popup-content">
-        <span class="close" onclick="closeEditPopup()">&times;</span>
-        <h2>Modifier le Fournisseur</h2>
-        <form id="editForm" method="post" class="form-popup">
-            {% csrf_token %}
-            <div id="editFormContent"></div>
-            <button type="submit" class="btn btn-modifier">Enregistrer</button>
-        </form>
-    </div>
-</div>
+<!-- Pop-up pour la modification avec script -->
 
-<!-- Popup pour ajouter un fournisseur -->
+{% include 'fournisseurs/modifier_fournisseur_popup.html' %}
+
+<!-- Popup pour ajouter un fournisseur avec script -->
 {% include 'fournisseurs/ajouter_fournisseur_popup.html' %}
+
 <script>
 
-    // JavaScript pour gérer l'ouverture et la fermeture des popups :
+    // JavaScript pour gérer la fermeture des popups en cliquant à l'extérieur:
 
-    //Ajout fournisseur dans ajouter_fournisseur_popup.html
-    
-    // afficher détails dans details_fournisseur_popup.html
-
-// Fermer en cliquant à l'extérieur
-window.addEventListener('click', function(event) {
-    if (event.target.classList.contains('popup')) {
-        event.target.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-});
-
-
-    //Modification -----------------------------------------
-    function openEditPopup(fournisseurId) {
-            fetch(`/fournisseurs/modifier/${fournisseurId}/`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('editFormContent').innerHTML = data;
-                    document.getElementById('editPopup').style.display = 'block';
-                });
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('popup')) {
+            event.target.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
+    });
 
-        function closeEditPopup() {
-            document.getElementById('editPopup').style.display = 'none';
-        }
-
-    //Gestion modification
-    document.getElementById('editForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload(); // Recharger la page après la modification
-                    }
-                });
-        });
 </script>
 {% endblock %}

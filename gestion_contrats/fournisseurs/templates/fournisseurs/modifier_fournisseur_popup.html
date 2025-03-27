@@ -1,1 +1,50 @@
-{{ form.as_p }}
+<div id="editPopup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeEditPopup()">&times;</span>
+        <h2>Modifier le Fournisseur</h2>
+        <form id="editForm" method="post" class="form-popup">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="PUT">
+            <div id="editFormContent"><!-- Les champs seront chargés ici --></div>
+            <button type="submit" class="btn btn-modifier">Enregistrer</button>
+        </form>        
+    </div>
+</div>
+
+<script>
+    function openEditPopup(fournisseurId) {
+        fetch(`/fournisseurs/modifier/${fournisseurId}/`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('editFormContent').innerHTML = data; // Injecte les champs ici
+                document.getElementById('editForm').action = `/fournisseurs/modifier/${fournisseurId}/`;
+                document.getElementById('editPopup').style.display = 'block';
+            });
+    }
+
+    function closeEditPopup() {
+        document.getElementById('editPopup').style.display = 'none';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST', // Django interprétera PUT via _method
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload(); // Recharger la page après modification
+            } else {
+                alert("Erreur lors de la modification !");
+            }
+        });
+    });
+</script>
