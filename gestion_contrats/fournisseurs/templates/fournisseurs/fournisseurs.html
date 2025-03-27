@@ -29,8 +29,8 @@
                         <td>{{ fournisseur.nif }}</td>
                         <td>{{ fournisseur.activite }}</td>
                         <td class="actions">
-                            <a href="#" class="btn btn-details">Détails</a>
-                            <a href="#" class="btn btn-modifier">Modifier</a>
+                            <a href="#" class="btn btn-details" onclick="openDetailsPopup({{ fournisseur.id}})">Détails</a>
+                            <a href="#" class="btn btn-modifier" onclick="openEditPopup({{ fournisseur.id }})">Modifier</a>
                             <a href="#" class="btn btn-supprimer">Supprimer</a>
                         </td>
                     </tr>
@@ -46,32 +46,72 @@
 </div>
 <button id="openPopup" class="btn btn-ajouter">Ajouter un Fournisseur</button>
 
-<!-- Popup pour ajouter un fournisseur -->
-<div id="addSupplierPopup" class="popup">
+ <!-- Pop-up pour les détails -->
+
+{% include 'fournisseurs/details_fournisseur_popup.html' %}
+
+<!-- Pop-up pour la modification -->
+<div id="editPopup" class="popup">
     <div class="popup-content">
-        <span class="close">&times;</span>
-        <h2>Ajouter un Fournisseur</h2>
-        <form method="post" action="{% url 'fournisseurs' %}">
+        <span class="close" onclick="closeEditPopup()">&times;</span>
+        <h2>Modifier le Fournisseur</h2>
+        <form id="editForm" method="post" class="form-popup">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-ajouter">Ajouter</button>
+            <div id="editFormContent"></div>
+            <button type="submit" class="btn btn-modifier">Enregistrer</button>
         </form>
     </div>
 </div>
+
+<!-- Popup pour ajouter un fournisseur -->
+{% include 'fournisseurs/ajouter_fournisseur_popup.html' %}
 <script>
-    // JavaScript pour gérer l'ouverture et la fermeture du popup
-    document.getElementById('openPopup').addEventListener('click', function() {
-        document.getElementById('addSupplierPopup').style.display = 'block';
-    });
 
-    document.querySelector('.close').addEventListener('click', function() {
-        document.getElementById('addSupplierPopup').style.display = 'none';
-    });
+    // JavaScript pour gérer l'ouverture et la fermeture des popups :
 
-    window.addEventListener('click', function(event) {
-        if (event.target == document.getElementById('addSupplierPopup')) {
-            document.getElementById('addSupplierPopup').style.display = 'none';
+    //Ajout fournisseur dans ajouter_fournisseur_popup.html
+    
+    // afficher détails dans details_fournisseur_popup.html
+
+// Fermer en cliquant à l'extérieur
+window.addEventListener('click', function(event) {
+    if (event.target.classList.contains('popup')) {
+        event.target.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+});
+
+
+    //Modification -----------------------------------------
+    function openEditPopup(fournisseurId) {
+            fetch(`/fournisseurs/modifier/${fournisseurId}/`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('editFormContent').innerHTML = data;
+                    document.getElementById('editPopup').style.display = 'block';
+                });
         }
-    });
+
+        function closeEditPopup() {
+            document.getElementById('editPopup').style.display = 'none';
+        }
+
+    //Gestion modification
+    document.getElementById('editForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // Recharger la page après la modification
+                    }
+                });
+        });
 </script>
 {% endblock %}

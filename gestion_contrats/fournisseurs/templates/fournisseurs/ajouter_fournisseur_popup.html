@@ -1,0 +1,164 @@
+<div id="addSupplierPopup" class="popup">
+    <div class="popup-content">
+        <span class="close">&times;</span>
+        <h2>Ajouter un Fournisseur</h2>
+        <form method="post" action="{% url 'fournisseurs' %}" class="form-popup">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+
+                <!-- Ligne 1 -->
+                <div class="form-group">
+                    <label for="{{ form.nom_du_contractant.id_for_label }}">Nom du Contractant</label>
+                    {{ form.nom_du_contractant }}
+            
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
+            
+                <!-- Ligne 2 -->
+                <div class="form-group">
+                    <label for="{{ form.telephone.id_for_label }}">Téléphone</label>
+                    {{ form.telephone }}
+            
+                    <label for="{{ form.telephone_2.id_for_label }}">Téléphone 2</label>
+                    {{ form.telephone_2 }}
+                </div>
+            
+                <!-- Ligne 3 -->
+                <div class="form-group">
+                    <label for="{{ form.num_fixe.id_for_label }}">Num fixe</label>
+                    {{ form.num_fixe }}
+            
+                    <label for="{{ form.fax.id_for_label }}">Fax</label>
+                    {{ form.fax }}
+                </div>
+            
+                <!-- Ligne 4 -->
+                <div class="form-group">
+                    <label for="{{ form.adresse.id_for_label }}">Adresse</label>
+                    {{ form.adresse }}
+            
+                    <label for="{{ form.wilaya.id_for_label }}">Wilaya</label>
+                    {{ form.wilaya }}
+                </div>
+            
+                <!-- Ligne 5 -->
+                <div class="form-group">
+                    <label for="{{ form.ville.id_for_label }}">Ville</label>
+                    {{ form.ville }}
+            
+                    <label for="{{ form.rue.id_for_label }}">Rue</label>
+                    {{ form.rue }}
+                </div>
+            
+                <!-- Ligne 6 -->
+                <div class="form-group">
+                    <label for="{{ form.numero.id_for_label }}">Numéro de rue</label>
+                    {{ form.numero }}
+            
+                    <label for="{{ form.code_postal.id_for_label }}">Code postal</label>
+                    {{ form.code_postal }}
+                </div>
+            
+                <!-- Ligne 7 -->
+                <div class="form-group">
+                    <label for="{{ form.nif.id_for_label }}">NIF</label>
+                    {{ form.nif }}
+            
+                    <label for="{{ form.activite.id_for_label }}">Activité</label>
+                    {{ form.activite }}
+                </div>
+            
+                <!-- Ligne 8 -->
+                <div class="form-group">
+                    <label for="{{ form.n_identification_fiscale.id_for_label }}">N° Identification Fiscale</label>
+                    {{ form.n_identification_fiscale }}
+            
+                    <label for="{{ form.n_identification_statistique.id_for_label }}">N° Identification Statistique</label>
+                    {{ form.n_identification_statistique }}
+                </div>
+            
+                <!-- Ligne 9 -->
+                <div class="form-group">
+                    <label for="{{ form.n_registre_commerce.id_for_label }}">N° Registre Commerce</label>
+                    {{ form.n_registre_commerce }}
+            
+                    <label for="{{ form.article_imposition.id_for_label }}">Article Imposition</label>
+                    {{ form.article_imposition }}
+                </div>
+            
+                <!-- Ligne 10 -->
+                <div class="form-group">
+                    <label for="{{ form.systeme_numerotation_universel.id_for_label }}">Système Numérotation Universel</label>
+                    {{ form.systeme_numerotation_universel }}
+            
+                    <label for="{{ form.carte_artisant.id_for_label }}">Carte Artisant</label>
+                    {{ form.carte_artisant }}
+                </div>
+            
+                <!-- Ligne 11 -->
+                <div class="form-group">
+                    <label for="{{ form.num_agrement.id_for_label }}">N° Agrément</label>
+                    {{ form.num_agrement }}
+            
+                    <label for="{{ form.crit_rech_1.id_for_label }}">Critère de Recherche 1</label>
+                    {{ form.crit_rech_1 }}
+                </div>
+            
+                <!-- Ligne 12 -->
+                <div class="form-group">
+                    <label for="{{ form.forme_jurdique.id_for_label }}">Forme Juridique</label>
+                    {{ form.forme_jurdique }}
+            
+                    <label for="{{ form.branche.id_for_label }}">Branche</label>
+                    {{ form.branche }}
+                </div>
+            
+                <!-- Ligne 13 -->
+                <div class="form-group">
+                    <label for="{{ form.type_partenaire.id_for_label }}">Type Partenaire</label>
+                    {{ form.type_partenaire }}
+            
+                    <label for="{{ form.cle_pays_banque.id_for_label }}">Clé Pays Banque</label>
+                    {{ form.cle_pays_banque }}
+                </div>
+            
+                <!-- Ligne 14 -->
+                <div class="form-group">
+                    <label for="{{ form.cle_bancaire.id_for_label }}">Clé Bancaire</label>
+                    {{ form.cle_bancaire }}
+            
+                    <label for="{{ form.compte_bancaire.id_for_label }}">Compte Bancaire</label>
+                    {{ form.compte_bancaire }}
+                </div>
+            
+                <!-- Ligne 15 -->
+                <div class="form-group">
+                    <label for="{{ form.cle_controle_bancaire.id_for_label }}">Clé Contrôle Bancaire</label>
+                    {{ form.cle_controle_bancaire }}
+                </div>
+            
+            </div>            
+            <!-- Bouton de soumission -->
+            <button type="submit" class="btn btn-ajouter">Ajouter</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('openPopup').addEventListener('click', function() {
+        document.getElementById('addSupplierPopup').style.display = 'block';
+    });
+    
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('addSupplierPopup').style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('addSupplierPopup')) {
+            document.getElementById('addSupplierPopup').style.display = 'none';
+        }
+    });
+
+</script>

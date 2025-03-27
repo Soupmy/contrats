@@ -1,0 +1,77 @@
+<div id="detailsPopup" class="popup details-popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeDetailsPopup()">&times;</span>
+        <h2>Détails du Fournisseur</h2>
+        <div class="form-popup">  <!-- Conteneur principal -->
+            <div class="form-grid" id="detailsContent">  
+                {% for field, value in field_values %}
+                    <div class="form-group">
+                        <label>{{ field }}</label>
+                        <input type="text" 
+                            value="{{ value }}" 
+                            readonly
+                            class="readonly-field">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+function openDetailsPopup(fournisseurId) {
+    fetch(`/fournisseurs/details/${fournisseurId}/`)
+        .then(response => {
+            if (!response.ok) throw new Error("Erreur réseau");
+            return response.json();
+        })
+        .then(data => {
+            const contentContainer = document.querySelector('#detailsPopup .form-grid');
+            contentContainer.innerHTML = ''; // Réinitialise le contenu
+
+            for (const [field, value] of Object.entries(data)) {
+                const formGroup = document.createElement('div');
+                formGroup.classList.add('form-group');
+
+                const label = document.createElement('label');
+                label.textContent = field.replace(/_/g, ' ').toUpperCase();
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = value || ''; // Mettre une valeur vide si null
+                input.readOnly = true;
+                input.classList.add('readonly-field');
+
+                formGroup.appendChild(label);
+                formGroup.appendChild(input);
+                contentContainer.appendChild(formGroup);
+            }
+
+            document.getElementById('detailsPopup').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Erreur lors du chargement des détails");
+        });
+}
+
+
+    
+    document.getElementById('openDetailsPopup').addEventListener('click', function () {
+        document.getElementById('detailsPopup').style.display = 'block';
+    });
+
+    document.querySelector('.close').addEventListener('click', function() {
+        document.getElementById('detailsPopup').style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('addSupplierPopup')) {
+            document.getElementById('detailsPopup').style.display = 'none';
+        }
+    });
+    
+</script>

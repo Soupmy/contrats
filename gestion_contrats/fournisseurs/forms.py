@@ -4,4 +4,7 @@ from .models import JuridiqueFournisseur
 class FournisseurForm(forms.ModelForm):
     class Meta:
         model = JuridiqueFournisseur
-        fields = '__all__'  # inclure tout les champs dans le form
+        exclude = [
+            'date_exclusion', 'duree_exclusion', 'date_levee_sanction', 
+            'structure_ayant_exclu', 'motifs', 'etat', 'type', 'motifs', 'remarques'
+        ] 

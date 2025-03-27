@@ -53,6 +53,10 @@ class JuridiqueFournisseur(models.Model):
     def __str__(self):
         return self.nom_du_contractant
     
+    def get_fields_with_values(self):
+        return [(field.name, getattr(self, field.name)) 
+            for field in self._meta.get_fields() 
+            if not field.is_relation or field.one_to_one]
+    
     class Meta:
         db_table = 'JURIDIQUE_FOURNISSEUR'
-    
