@@ -1,8 +1,186 @@
 {% extends 'base.html' %}
 
-{% block title %}Page 4 - Blacklists{% endblock %}
+{% block title %}Fournisseurs Blacklistés{% endblock %}
 
 {% block content %}
-    <h2>Bienvenue sur la page des blacklists</h2>
-    <p>Voici la liste des fournisseurs blacklistés.</p>
+
+    {% if messages %}
+    <div class="messages" style="padding: 10px; background: #f8f9fa; border: 1px solid #ddd;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+<h2>Fournisseurs Blacklistés</h2>
+
+<!-- Filtres -->
+<div style="margin-bottom: 20px;">
+    <a href="?filtre=all" class="btn">Tous</a>
+    <a href="?filtre=temporaire" class="btn">Blacklistés temporairement</a>
+    <a href="?filtre=a_vie" class="btn">Blacklistés à vie</a>
+</div>
+
+<!-- Tableau des fournisseurs blacklistés -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nom du Contractant</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Ville</th>
+                <th>Date Exclusion</th>
+                <th>Durée</th>
+                <th>Motifs</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if fournisseurs %}
+                {% for f in fournisseurs %}
+                <tr>
+                    <td>{{ f.nom_du_contractant }}</td>
+                    <td>{{ f.email }}</td>
+                    <td>{{ f.telephone }}</td>
+                    <td>{{ f.ville }}</td>
+                    <td>{{ f.date_exclusion }}</td>
+                    <td>{{ f.duree_exclusion }}</td>
+                    <td>{{ f.motifs|truncatewords:10 }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucun fournisseur blacklisté trouvé.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Bouton d'ajout -->
+<button id="openPopup" class="btn btn-ajouter">Blacklister un fournisseur</button>
+
+<!-- Popup d'ajout -->
+<div id="popupForm" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h3>Blacklister un Fournisseur</h3>
+        
+        <!-- Choix du type de blacklistage -->
+        <div class="blacklist-type-selector" style="margin-bottom: 15px;">
+            <label style="margin-right: 10px;">
+                <input type="radio" name="blacklist_type" value="temporaire" checked> Blacklister temporairement
+            </label>
+            <label>
+                <input type="radio" name="blacklist_type" value="a_vie"> Blacklister à vie
+            </label>
+        </div>
+        
+        <form method="post" action="{% url 'blacklister_fournisseur' %}">
+            {% csrf_token %}
+            <input type="hidden" id="blacklist_type_field" name="blacklist_type" value="temporaire">
+            
+            <!-- Sélection du fournisseur -->
+            <div class="form-group">
+                <label for="fournisseur_id">Sélectionnez un fournisseur :</label>
+                <select name="fournisseur_id" id="fournisseur_id" required>
+                    <option value="">-- Choisir un fournisseur --</option>
+                    {% for f in fournisseurs_disponibles %}
+                        <option value="{{ f.id }}">{{ f.nom_du_contractant }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Champs pour blacklistage temporaire -->
+            <div id="temporaire_fields">
+                <div class="form-group">
+                    <label for="date_exclusion">Date d'exclusion :</label>
+                    <input type="date" name="date_exclusion" id="date_exclusion" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="duree_exclusion">Durée d'exclusion :</label>
+                    <select name="duree_exclusion" id="duree_exclusion">
+                        <option value="3 mois">3 mois</option>
+                        <option value="6 mois">6 mois</option>
+                        <option value="12 mois">12 mois</option>
+                        <option value="24 mois">24 mois</option>
+                        <option value="36 mois">36 mois</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_levee_sanction">Date de levée de sanction :</label>
+                    <input type="date" name="date_levee_sanction" id="date_levee_sanction">
+                </div>
+            </div>
+            
+            <!-- Champs communs -->
+            <div class="form-group">
+                <label for="structure_ayant_exclu">Structure ayant exclu :</label>
+                <input type="text" name="structure_ayant_exclu" id="structure_ayant_exclu" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="motifs">Motifs :</label>
+                <textarea name="motifs" id="motifs" rows="4" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="remarques">Remarques :</label>
+                <textarea name="remarques" id="remarques" rows="2"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-ajouter">Confirmer</button>
+        </form>
+    </div>
+</div>
+
+<!-- Script -->
+<script>
+document.getElementById('openPopup').addEventListener('click', function() {
+    document.getElementById('popupForm').style.display = 'flex';
+    // Définir la date d'aujourd'hui par défaut
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date_exclusion').value = today;
+    calculateLeveeDate();
+});
+
+function closePopup() {
+    document.getElementById('popupForm').style.display = 'none';
+}
+
+// Gestion de l'affichage des champs selon le type de blacklistage
+document.querySelectorAll('input[name="blacklist_type"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        document.getElementById('blacklist_type_field').value = this.value;
+        if (this.value === 'temporaire') {
+            document.getElementById('temporaire_fields').style.display = 'block';
+        } else {
+            document.getElementById('temporaire_fields').style.display = 'none';
+        }
+    });
+});
+
+// Calculer automatiquement la date de levée de sanction
+document.getElementById('date_exclusion').addEventListener('change', calculateLeveeDate);
+document.getElementById('duree_exclusion').addEventListener('change', calculateLeveeDate);
+
+function calculateLeveeDate() {
+    const exclusionDate = new Date(document.getElementById('date_exclusion').value);
+    const duree = document.getElementById('duree_exclusion').value;
+    
+    if (exclusionDate && duree) {
+        const months = parseInt(duree.split(' ')[0]);
+        const leveeDate = new Date(exclusionDate);
+        leveeDate.setMonth(leveeDate.getMonth() + months);
+        
+        const formattedDate = leveeDate.toISOString().split('T')[0];
+        document.getElementById('date_levee_sanction').value = formattedDate;
+    }
+}
+</script>
+
 {% endblock %}

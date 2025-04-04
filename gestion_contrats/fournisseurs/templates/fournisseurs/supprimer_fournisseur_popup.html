@@ -2,7 +2,7 @@
     <div class="popup-content">
         <span class="close" onclick="closeDeletePopup()">&times;</span>
         <h2>Supprimer le fournisseur ?</h2>
-        <p>Voulez-vous vraiment supprimer ce fournisseur ? Cette action est irréversible.</p>
+        <p>Voulez-vous vraiment supprimer ce fournisseur "<span id="nomFournisseur"></span>" ? Cette action est irréversible.</p>
         <form id='deleteForm' method="post">
             {% csrf_token %}
             <input type="hidden" name="_method" value="DELETE">
@@ -17,11 +17,28 @@
 
 <script>
     let fournisseurIdToDelete = null;
+
     function openDeletePopup(fournisseurId) {
-    console.log("Ouverture du popup pour fournisseur ID:", fournisseurId);
-    fournisseurIdToDelete = fournisseurId;
-    document.getElementById('deletePopup').style.display = 'block';
-}
+        console.log("Ouverture du popup pour fournisseur ID:", fournisseurId);
+        fournisseurIdToDelete = fournisseurId;
+
+        // Récupérer le nom du fournisseur via une requête AJAX
+        fetch(`/fournisseurs/supprimer/${fournisseurId}/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Injecter le nom dans le popup
+            document.getElementById('nomFournisseur').textContent = data.fournisseur;
+            document.getElementById('deletePopup').style.display = 'block';
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Erreur lors du chargement du fournisseur");
+        });
+    }
 
     function closeDeletePopup() {
         document.getElementById('deletePopup').style.display = 'none';
@@ -32,21 +49,22 @@
         if (!fournisseurIdToDelete) return;
 
         fetch(`/fournisseurs/supprimer/${fournisseurIdToDelete}/`, {
-            method: 'POST', 
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
                 'X-Requested-With': 'XMLHttpRequest',
             },
             body: '_method=DELETE',
-            })
+        })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload(); //recharger la page
+                window.location.reload();
             } else {
-                alert("Erreur los de la suppression. ");
+                alert("Erreur lors de la suppression.");
             }
         });
     });
 </script>
+
