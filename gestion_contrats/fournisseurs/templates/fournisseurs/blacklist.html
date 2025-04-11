@@ -4,23 +4,13 @@
 
 {% block content %}
 
-    {% if messages %}
-    <div class="messages" style="padding: 10px; background: #f8f9fa; border: 1px solid #ddd;">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" style="color: {% if message.tags == 'error' %}red{% else %}green{% endif %};">
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
 <h2>Fournisseurs Blacklistés</h2>
 
 <!-- Filtres -->
 <div style="margin-bottom: 20px;">
-    <a href="?filtre=all" class="btn">Tous</a>
-    <a href="?filtre=temporaire" class="btn">Blacklistés temporairement</a>
-    <a href="?filtre=a_vie" class="btn">Blacklistés à vie</a>
+    <a href="?filtre=all" class="btn btn-details">Tous</a>
+    <a href="?filtre=temporaire" class="btn btn-details">Blacklistés temporairement</a>
+    <a href="?filtre=a_vie" class="btn btn-details">Blacklistés à vie</a>
 </div>
 
 <!-- Tableau des fournisseurs blacklistés -->
@@ -34,7 +24,9 @@
                 <th>Ville</th>
                 <th>Date Exclusion</th>
                 <th>Durée</th>
+                <th>Date Levée de Sanction</th>
                 <th>Motifs</th>
+                <th>Remarques</th>
             </tr>
         </thead>
         <tbody>
@@ -47,7 +39,9 @@
                     <td>{{ f.ville }}</td>
                     <td>{{ f.date_exclusion }}</td>
                     <td>{{ f.duree_exclusion }}</td>
+                    <td>{{ f.date_levee_sanction }}</td>
                     <td>{{ f.motifs|truncatewords:10 }}</td>
+                    <td>{{ f.remarques|truncatewords:10 }}</td>
                 </tr>
                 {% endfor %}
             {% else %}

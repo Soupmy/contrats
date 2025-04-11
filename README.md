@@ -9,3 +9,33 @@ je viens de me rendre compte que j'avais pas vérifié les models de accounts et
 # questions pour la suite
 - est ce qu'on garde l'app evaluations ou on la fusionne avec contrats ?
 - est ce que on garde blacklist dans la meme app que fournisseurs ?
+
+# sql pour la gestion quotidienne des blacklist ( a utiliser dans toad)
+
+ajouter les autorisations au user oracle avant.
+GRANT CREATE JOB TO MON_UTILISATEUR;
+GRANT MANAGE SCHEDULER TO MON_UTILISATEUR;
+GRANT EXECUTE ON DBMS_SCHEDULER TO MON_UTILISATEUR;
+
+
+BEGIN
+  DBMS_SCHEDULER.create_job (
+    job_name        => 'LEVER_SANCTIONS_JOB',
+    job_type        => 'PLSQL_BLOCK',
+    job_action      => 'BEGIN 
+                          UPDATE JURIDIQUE_FOURNISSEUR 
+                          SET statut = ''HABILITE'',
+                              DATE_EXCLUSION = NULL,
+                              DUREE_EXCLUSION = NULL,
+                              DATE_LEVEE_SANCTION = NULL,
+                              STRUCTURE_AYANT_EXCLU = NULL
+                          WHERE DATE_LEVEE_SANCTION <= SYSDATE
+                          AND statut = ''BLACKLISTE'';
+                        END;',
+    start_date      => SYSTIMESTAMP,
+    repeat_interval => 'FREQ=MINUTELY; INTERVAL=30',
+    enabled         => TRUE,
+    comments        => 'Job qui lève les sanctions et nettoie les champs associés toutes les 30 minutes'
+  );
+END;
+/
