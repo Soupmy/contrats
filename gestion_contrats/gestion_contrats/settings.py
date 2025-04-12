@@ -58,8 +58,44 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+    'gestion_contrats.middleware.AuthRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# Sécurité avancée 'commenter pendant le developement
+#SECURE_SSL_REDIRECT = True
+#SESSION_COOKIE_SECURE = True
+#CSRF_COOKIE_SECURE = True
+#SECURE_BROWSER_XSS_FILTER = True
+
+SESSION_COOKIE_SECURE = False  # Désactive les cookies sécurisés
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False  # Désactive la redirection HTTPS
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'gestion_contrats': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+LOGIN_EXEMPT_URLS = [
+    r'^admin/',
+    r'^password_reset/',
 ]
 
 ROOT_URLCONF = 'gestion_contrats.urls'
@@ -120,6 +156,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -150,3 +190,18 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AUTH settings
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+LOGIN_URL = '/'  # Redirection vers la page de login
+LOGIN_REDIRECT_URL = '/fournisseurs/'  # Après connexion réussie
+LOGOUT_REDIRECT_URL = '/'  # Après déconnexion
+
+# Configuration email (exemple pour Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'soumeya.dahman2004@gmail.com'
+EMAIL_HOST_PASSWORD = 'oracle2025'

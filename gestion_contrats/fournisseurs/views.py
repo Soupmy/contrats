@@ -4,11 +4,13 @@ from .forms import FournisseurForm, BlacklistFournisseurForm
 from django.http import JsonResponse
 from django.contrib import messages
 import datetime
+from django.contrib.auth.decorators import login_required
 from django.utils.dateparse import parse_date
 
 # Create your views here.
 
 # Affichage fournisseurs et ajout 
+@login_required
 def fournisseurs_view(request):
     if request.method == 'POST':
         form = FournisseurForm(request.POST)
@@ -22,13 +24,14 @@ def fournisseurs_view(request):
     return render(request, 'fournisseurs/fournisseurs.html', {'fournisseurs': fournisseurs, 'form': form})
 
 # Affichage détails fournisseur en fonction de l'id
+@login_required
 def fournisseurs_details(request, fournisseur_id):
     fournisseurs = get_object_or_404(JuridiqueFournisseur, id=fournisseur_id)
     field_values = {field.name: getattr(fournisseurs, field.name) for field in fournisseurs._meta.fields}
     return JsonResponse(field_values)
 
 
-
+@login_required
 def supprimer_fournisseur(request, id):
     fournisseur = get_object_or_404(JuridiqueFournisseur, id=id)
 
@@ -46,7 +49,7 @@ def supprimer_fournisseur(request, id):
 
 
 
-
+@login_required
 def modifier_fournisseur(request, id):
     fournisseur = get_object_or_404(JuridiqueFournisseur, id=id)
 
@@ -61,7 +64,7 @@ def modifier_fournisseur(request, id):
     return render(request, 'fournisseurs/modifier_fournisseur_form.html', {'form': form})
 
 
-
+@login_required
 def blacklist_view(request):
     filtre = request.GET.get('filtre', 'all')
     
@@ -88,7 +91,7 @@ def blacklist_view(request):
     
     return render(request, 'fournisseurs/blacklist.html', context)
 
-
+@login_required
 def blacklister_fournisseur(request):
     if request.method == 'POST':
         # Debug avant validation

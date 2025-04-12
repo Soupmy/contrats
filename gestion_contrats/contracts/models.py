@@ -1,7 +1,10 @@
 from django.db import models
 from fournisseurs.models import JuridiqueFournisseur
-from accounts.models import Unite
+from django.db import models
 
+def get_unite_model():
+    from accounts.models import Unite
+    return Unite
 class Contrat(models.Model):
     # Identifiant unique du contrat
     id = models.AutoField(primary_key=True)
@@ -76,7 +79,7 @@ class Contrat(models.Model):
 
     # Relations avec d'autres modèles
     id_contractant = models.ForeignKey(JuridiqueFournisseur, on_delete=models.CASCADE, blank=True, null=True)
-    unite = models.ForeignKey(Unite, on_delete=models.CASCADE, blank=True, null=True) #en rapport avec les unités qu'on a déja ? a vérifier
+    unite = models.ForeignKey( get_unite_model(), on_delete=models.CASCADE )
 
     def __str__(self):
         return f"Contrat {self.reference_du_contrat} - {self.intitul}"

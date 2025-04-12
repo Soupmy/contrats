@@ -3,32 +3,38 @@
     <ul>
         <li>
             <a href="{% url 'home' %}" data-title="Tableau de bord">
-                <span class="icon">📊</span>
+                <i class="fa-solid fa-chart-line icon"></i>
                 <span class="link-text">Tableau de bord</span>
             </a>
         </li>
         <li>
             <a href="{% url 'contrats' %}" data-title="Contrats">
-                <span class="icon">📝</span>
+                <i class="fa-solid fa-file-contract icon"></i>
                 <span class="link-text">Contrats</span>
             </a>
         </li>
         <li>
             <a href="{% url 'fournisseurs' %}" data-title="Fournisseurs">
-                <span class="icon">🏢</span>
+                <i class="fa-solid fa-building icon"></i>
                 <span class="link-text">Fournisseurs</span>
             </a>
         </li>
         <li>
             <a href="{% url 'blacklist' %}" data-title="Blacklists">
-                <span class="icon">⛔</span>
+                <i class="fa-solid fa-ban icon"></i>
                 <span class="link-text">Blacklists</span>
             </a>
         </li>
         <li>
             <a href="#" data-title="Paramètres">
-                <span class="icon">⚙️</span>
+                <i class="fa-solid fa-gear icon"></i>
                 <span class="link-text">Paramètres</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" onclick="..." class="logout-link">
+                <i class="fa-solid fa-sign-out-alt icon"></i>
+                <span class="link-text">Déconnexion</span>
             </a>
         </li>
     </ul>

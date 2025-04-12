@@ -1,18 +1,20 @@
-<div id="detailsPopup" class="popup details-popup">
+<div id="detailsPopup" class="popup details-popup"  style="display: none;">
     <div class="popup-content">
         <span class="close" onclick="closeDetailsPopup()">&times;</span>
         <h2>Détails du Fournisseur</h2>
-        <div class="form-popup">  <!-- Conteneur principal -->
-            <div class="form-grid" id="detailsContent">  
-                {% for field, value in field_values %}
-                    <div class="form-group">
-                        <label>{{ field }}</label>
-                        <input type="text" 
-                            value="{{ value }}" 
-                            readonly
-                            class="readonly-field">
-                    </div>
-                {% endfor %}
+            <div class="popup-body">
+            <div class="form-popup">  <!-- Conteneur principal -->
+                <div class="form-grid" id="detailsContent">  
+                    {% for field, value in field_values %}
+                        <div class="form-group">
+                            <label>{{ field }}</label>
+                            <input type="text" 
+                                value="{{ value }}" 
+                                readonly
+                                class="readonly-field">
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
@@ -76,5 +78,10 @@ function closeDetailsPopup() {
             document.getElementById('detailsPopup').style.display = 'none';
         }
     });
-    
+
+    document.querySelectorAll('.close-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        closePopup(btn.closest('.popup').id);
+    });
+    });
 </script>

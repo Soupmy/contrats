@@ -3,7 +3,6 @@
 {% block title %}Page 3 - Fournisseurs{% endblock %}
 
 {% block content %}
-    <h2>Bienvenue sur la page des fournisseurs</h2>
     <h2>Liste des Fournisseurs</h2>
     <div class="table-container">
         <table>
@@ -29,9 +28,17 @@
                         <td>{{ fournisseur.nif }}</td>
                         <td>{{ fournisseur.activite }}</td>
                         <td class="actions">
-                            <a href="#" class="btn btn-details" onclick="openDetailsPopup({{ fournisseur.id}})">Détails</a>
-                            <a href="#" class="btn btn-modifier" onclick="openEditPopup({{ fournisseur.id }})">Modifier</a>
-                            <a href="#" class="btn btn-supprimer" onclick="openDeletePopup({{ fournisseur.id }})">Supprimer</a>
+                            <a href="#"  class="icon-btn" onclick="openDetailsPopup({{ fournisseur.id}})">
+                                <i class="fa-solid fa-eye"></i>
+                                <span class="tooltip">Détails</span>
+                            </a>
+                            <a href="#" class="icon-btn" onclick="openEditPopup({{ fournisseur.id }})">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span class="tooltip">Modifier</span></a>
+                            <a href="#" class="icon-btn" onclick="openDeletePopup({{ fournisseur.id }})">
+                                <i class="fa-solid fa-trash"></i>
+                                <span class="tooltip">Supprimer</span>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}

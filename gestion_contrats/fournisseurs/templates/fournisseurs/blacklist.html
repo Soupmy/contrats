@@ -61,74 +61,75 @@
     <div class="popup-content">
         <span class="close" onclick="closePopup()">&times;</span>
         <h3>Blacklister un Fournisseur</h3>
-        
-        <!-- Choix du type de blacklistage -->
-        <div class="blacklist-type-selector" style="margin-bottom: 15px;">
-            <label style="margin-right: 10px;">
-                <input type="radio" name="blacklist_type" value="temporaire" checked> Blacklister temporairement
-            </label>
-            <label>
-                <input type="radio" name="blacklist_type" value="a_vie"> Blacklister à vie
-            </label>
-        </div>
-        
-        <form method="post" action="{% url 'blacklister_fournisseur' %}">
-            {% csrf_token %}
-            <input type="hidden" id="blacklist_type_field" name="blacklist_type" value="temporaire">
-            
-            <!-- Sélection du fournisseur -->
-            <div class="form-group">
-                <label for="fournisseur_id">Sélectionnez un fournisseur :</label>
-                <select name="fournisseur_id" id="fournisseur_id" required>
-                    <option value="">-- Choisir un fournisseur --</option>
-                    {% for f in fournisseurs_disponibles %}
-                        <option value="{{ f.id }}">{{ f.nom_du_contractant }}</option>
-                    {% endfor %}
-                </select>
+            <div class="popup-body">
+            <!-- Choix du type de blacklistage -->
+            <div class="blacklist-type-selector" style="margin-bottom: 15px;">
+                <label style="margin-right: 10px;">
+                    <input type="radio" name="blacklist_type" value="temporaire" checked> Blacklister temporairement
+                </label>
+                <label>
+                    <input type="radio" name="blacklist_type" value="a_vie"> Blacklister à vie
+                </label>
             </div>
             
-            <!-- Champs pour blacklistage temporaire -->
-            <div id="temporaire_fields">
-                <div class="form-group">
-                    <label for="date_exclusion">Date d'exclusion :</label>
-                    <input type="date" name="date_exclusion" id="date_exclusion" required>
-                </div>
+            <form method="post" action="{% url 'blacklister_fournisseur' %}">
+                {% csrf_token %}
+                <input type="hidden" id="blacklist_type_field" name="blacklist_type" value="temporaire">
                 
+                <!-- Sélection du fournisseur -->
                 <div class="form-group">
-                    <label for="duree_exclusion">Durée d'exclusion :</label>
-                    <select name="duree_exclusion" id="duree_exclusion">
-                        <option value="3 mois">3 mois</option>
-                        <option value="6 mois">6 mois</option>
-                        <option value="12 mois">12 mois</option>
-                        <option value="24 mois">24 mois</option>
-                        <option value="36 mois">36 mois</option>
+                    <label for="fournisseur_id">Sélectionnez un fournisseur :</label>
+                    <select name="fournisseur_id" id="fournisseur_id" required>
+                        <option value="">-- Choisir un fournisseur --</option>
+                        {% for f in fournisseurs_disponibles %}
+                            <option value="{{ f.id }}">{{ f.nom_du_contractant }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="date_levee_sanction">Date de levée de sanction :</label>
-                    <input type="date" name="date_levee_sanction" id="date_levee_sanction">
+                <!-- Champs pour blacklistage temporaire -->
+                <div id="temporaire_fields">
+                    <div class="form-group">
+                        <label for="date_exclusion">Date d'exclusion :</label>
+                        <input type="date" name="date_exclusion" id="date_exclusion" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duree_exclusion">Durée d'exclusion :</label>
+                        <select name="duree_exclusion" id="duree_exclusion">
+                            <option value="3 mois">3 mois</option>
+                            <option value="6 mois">6 mois</option>
+                            <option value="12 mois">12 mois</option>
+                            <option value="24 mois">24 mois</option>
+                            <option value="36 mois">36 mois</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date_levee_sanction">Date de levée de sanction :</label>
+                        <input type="date" name="date_levee_sanction" id="date_levee_sanction">
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Champs communs -->
-            <div class="form-group">
-                <label for="structure_ayant_exclu">Structure ayant exclu :</label>
-                <input type="text" name="structure_ayant_exclu" id="structure_ayant_exclu" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="motifs">Motifs :</label>
-                <textarea name="motifs" id="motifs" rows="4" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="remarques">Remarques :</label>
-                <textarea name="remarques" id="remarques" rows="2"></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-ajouter">Confirmer</button>
-        </form>
+                
+                <!-- Champs communs -->
+                <div class="form-group">
+                    <label for="structure_ayant_exclu">Structure ayant exclu :</label>
+                    <input type="text" name="structure_ayant_exclu" id="structure_ayant_exclu" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="motifs">Motifs :</label>
+                    <textarea name="motifs" id="motifs" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="remarques">Remarques :</label>
+                    <textarea name="remarques" id="remarques" rows="2"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-ajouter">Confirmer</button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -175,6 +176,11 @@ function calculateLeveeDate() {
         document.getElementById('date_levee_sanction').value = formattedDate;
     }
 }
+document.querySelectorAll('.close-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        closePopup(btn.closest('.popup').id);
+    });
+});
 </script>
 
 {% endblock %}

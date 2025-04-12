@@ -1,13 +1,15 @@
-<div id="editPopup" class="popup">
+<div id="editPopup" class="popup" style="display: none;">
     <div class="popup-content">
         <span class="close" onclick="closeEditPopup()">&times;</span>
         <h2>Modifier le Fournisseur</h2>
-        <form id="editForm" method="post" class="form-popup">
-            {% csrf_token %}
-            <input type="hidden" name="_method" value="PUT">
-            <div id="editFormContent"><!-- Les champs seront chargés ici --></div>
-            <button type="submit" class="btn btn-modifier">Enregistrer</button>
-        </form>        
+        <div class="popup-body">
+            <form id="editForm" method="post" class="form-popup">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <div id="editFormContent"><!-- Les champs seront chargés ici --></div>
+                <button type="submit" class="btn btn-modifier">Enregistrer</button>
+            </form>
+        </div>        
     </div>
 </div>
 
@@ -46,5 +48,10 @@
                 alert("Erreur lors de la modification !");
             }
         });
+    });
+    document.querySelectorAll('.close-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        closePopup(btn.closest('.popup').id);
+    });
     });
 </script>
