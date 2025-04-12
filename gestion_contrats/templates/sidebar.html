@@ -32,7 +32,14 @@
             </a>
         </li>
         <li>
-            <a href="#" onclick="..." class="logout-link">
+             <!-- Formulaire de déconnexion caché -->
+             <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+            </form>
+            
+            <!-- Lien de déconnexion stylisé -->
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+               data-title="Déconnexion" class="logout-link">
                 <i class="fa-solid fa-sign-out-alt icon"></i>
                 <span class="link-text">Déconnexion</span>
             </a>
