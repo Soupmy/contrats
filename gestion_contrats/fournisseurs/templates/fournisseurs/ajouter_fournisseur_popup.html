@@ -1,11 +1,10 @@
-<div id="addSupplierPopup" class="popup"  style="display: none;">
+<div id="addSupplierPopup" class="popup">
     <div class="popup-content">
-        <span class="close">&times;</span>
+        <span class="close-btn">&times;</span>
         <h2>Ajouter un Fournisseur</h2>
-            <div class="popup-body">
+        <div class="popup-body">
             <form method="post" action="{% url 'fournisseurs' %}" class="form-popup">
                 {% csrf_token %}
-                
                 <div class="form-grid">
 
                     <!-- Ligne 1 -->
@@ -142,30 +141,58 @@
                 
                 </div>            
                 <!-- Bouton de soumission -->
-                <button type="submit" class="btn btn-ajouter">Ajouter</button>
+                <button type="submit" class="btn-ajouter btn-primary">Ajouter</button>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    document.getElementById('openPopup').addEventListener('click', function() {
-        document.getElementById('addSupplierPopup').style.display = 'block';
-    });
-    
-    document.querySelector('.close').addEventListener('click', function() {
-        document.getElementById('addSupplierPopup').style.display = 'none';
+    let currentPopup = null;
+
+    function openPopup(popupId) {
+        currentPopup = document.getElementById(popupId);
+        currentPopup.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCurrentPopup() {
+        if (currentPopup) {
+            currentPopup.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentPopup = null;
+        }
+    }
+
+
+    // Ouverture du popup d'ajout
+    document.getElementById('openPopup').addEventListener('click', () => {
+        openPopup('addSupplierPopup');
     });
 
-    window.addEventListener('click', function(event) {
-        if (event.target == document.getElementById('addSupplierPopup')) {
-            document.getElementById('addSupplierPopup').style.display = 'none';
+    // Fermeture au clic sur le bouton ×
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', closeCurrentPopup);
+    });
+
+    // Fermeture au clic extérieur
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('popup')) {
+            closeCurrentPopup();
         }
     });
 
-    document.querySelectorAll('.close-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        closePopup(btn.closest('.popup').id);
+    // Fermeture avec la touche ESC
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeCurrentPopup();
+        }
     });
+
+    // Initialisation au chargement
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.popup').forEach(popup => {
+            popup.style.display = 'none';
+        });
     });
 </script>
