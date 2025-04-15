@@ -1,0 +1,42 @@
+# Fichiers Python compilés
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environnement virtuel
+venv/
+env/
+ENV/
+*.env
+
+# Fichiers Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+instance/
+media/
+staticfiles/
+
+*/migrations/
+*/migrations/*.py
+*/migrations/*.pyc
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Tests / coverage
+.coverage
+htmlcov/
+.tox/
+pytest_cache/
+
+# Fichiers secrets
+.env
+*.secret
+secrets.json
