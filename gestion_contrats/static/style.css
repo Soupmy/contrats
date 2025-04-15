@@ -35,12 +35,18 @@ body.sidebar-expanded {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   margin: 30px auto;
   max-width: 1400px;
-  overflow: hidden;
+  overflow: hidden; /* garde cette valeur pour les coins arrondis */
+}
+
+.table-scroll {
+  overflow-x: auto;
+  width: 100%;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 800px; /* Ajoute une largeur minimale si tu veux forcer le scroll */
 }
 
 thead {
@@ -442,6 +448,11 @@ ajouter slide lateral popup
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
+.filter-container{
+  margin-left: 0;
+  margin-right: auto;
+}
+
 /* Au focus, le filtre change de bordure */
 .filter-input:focus {
   border-color: #FF6B00;
@@ -475,10 +486,11 @@ ajouter slide lateral popup
 }
 
 /* Style pour la barre de recherche */
-.search-container {
-  position: relative;
-  margin: 20px 0;
-  max-width: 400px;
+.search-container,
+.search-container-fournisseur {
+    position: relative;
+    flex-grow: 1;
+    max-width: 400px;
 }
 
 .search-input {
@@ -495,12 +507,20 @@ ajouter slide lateral popup
   box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
 }
 
+
 .search-icon {
   position: absolute;
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
   color: #FF6B00;
+}
+
+.search-export-wrapper {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin: 20px 0;
 }
 
 .warning-icon {
@@ -570,5 +590,99 @@ ajouter slide lateral popup
   }
 }
 
-/* css du bouton export 
-ajouter de l'overflow pour une scrollbar horizontale dans mes listes*/
+.btn-export-excel {
+  background: #217346; /* Vert Excel */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9em;
+  position: relative;
+  margin-left: 15px; /* Espacement depuis les autres éléments */
+  box-shadow: 0 2px 8px rgba(33, 115, 70, 0.2);
+}
+
+.btn-export-excel:hover {
+  background: #1a5c38;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(33, 115, 70, 0.3);
+}
+
+
+.btn-export-excel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+      to right,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.3) 100%
+  );
+  transform: skewX(-15deg);
+  transition: left 0.6s;
+}
+
+.btn-export-excel:hover::before {
+  left: 150%;
+}
+
+.fa-file-excel {
+  font-size: 1.2em;
+  color: #A9D08E; /* Vert clair Excel */
+  transition: transform 0.3s ease;
+}
+
+.btn-export-excel:hover .fa-file-excel {
+  transform: scale(1.1);
+}
+
+/* Alignement à droite */
+.export-container {
+  text-align: right;
+  margin-right: auto;
+  margin-left: 0;
+  white-space: nowrap;
+}
+
+div[style="display: flex;"] {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+/* Version mobile */
+/* Responsive */
+@media (max-width: 768px) {
+  .search-export-wrapper {
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .search-container,
+  .search-container-fournisseur {
+      max-width: 100%;
+      width: 100%;
+  }
+  
+  .export-container {
+      margin-left: 0;
+      width: 100%;
+  }
+  
+  .btn-export-excel {
+      width: 100%;
+      justify-content: center;
+  }
+}
+/*
+régler le responsive des boutons filter
+ajouter le git ignore*/

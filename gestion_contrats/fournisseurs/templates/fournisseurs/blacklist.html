@@ -6,63 +6,70 @@
 
 <h2>Fournisseurs Blacklistés</h2>
 
-<!-- Filtres -->
-<div style="margin-bottom: 20px;">
-    <a href="?filtre=all" class="btn btn-filter {% if filtre == 'all' %}filter-active{% endif %}">Tous</a>
-    <a href="?filtre=temporaire" class="btn btn-filter {% if filtre == 'temporaire' %}filter-active{% endif %}">Blacklistés temporairement</a>
-    <a href="?filtre=a_vie" class="btn btn-filter {% if filtre == 'a_vie' %}filter-active{% endif %}">Blacklistés à vie</a>
-</div>
-
-<a href="{% url 'export_blacklists' %}" class="btn btn-primary">
-    Exporter les fournisseurs blacklistés
-  </a>
-  
-
 <!-- Barre de recherche -->
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="Rechercher un fournisseur..." class="search-input">
     <i class="fa-solid fa-magnifying-glass search-icon"></i>
 </div>
 
+<!-- Filtres -->
+<div style="display: flex;">
+    <div style="margin-bottom: 20px;" class="filter-container">
+        <a href="?filtre=all" class="btn btn-filter {% if filtre == 'all' %}filter-active{% endif %}">Tous</a>
+        <a href="?filtre=temporaire" class="btn btn-filter {% if filtre == 'temporaire' %}filter-active{% endif %}">Blacklistés temporairement</a>
+        <a href="?filtre=a_vie" class="btn btn-filter {% if filtre == 'a_vie' %}filter-active{% endif %}">Blacklistés à vie</a>
+    </div>
+    <div >
+        <a href="{% url 'export_blacklists' %}" class="btn btn-export-excel">
+            <i class="fa-solid fa-file-excel"></i>
+            Exporter vers Excel
+        </a>
+    </div>
+</div>
+
+
+
 
 <!-- Tableau des fournisseurs blacklistés -->
 <div class="table-container">
-    <table id="blacklistTable">
-        <thead>
-            <tr>
-                <th>Nom du Contractant</th>
-                <th>Email</th>
-                <th>Téléphone</th>
-                <th>Ville</th>
-                <th>Date Exclusion</th>
-                <th>Durée</th>
-                <th>Date Levée de Sanction</th>
-                <th>Motifs</th>
-                <th>Remarques</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if fournisseurs %}
-                {% for f in fournisseurs %}
-                <tr class="searchable">
-                    <td>{{ f.nom_du_contractant }}</td>
-                    <td>{{ f.email }}</td>
-                    <td>{{ f.telephone }}</td>
-                    <td>{{ f.ville }}</td>
-                    <td>{{ f.date_exclusion }}</td>
-                    <td>{{ f.duree_exclusion }}</td>
-                    <td>{{ f.date_levee_sanction }}</td>
-                    <td>{{ f.motifs|truncatewords:10 }}</td>
-                    <td>{{ f.remarques|truncatewords:10 }}</td>
-                </tr>
-                {% endfor %}
-            {% else %}
+    <div class="table-scroll">
+        <table id="blacklistTable">
+            <thead>
                 <tr>
-                    <td colspan="7">Aucun fournisseur blacklisté trouvé.</td>
+                    <th>Nom du Contractant</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Ville</th>
+                    <th>Date Exclusion</th>
+                    <th>Durée</th>
+                    <th>Date Levée de Sanction</th>
+                    <th>Motifs</th>
+                    <th>Remarques</th>
                 </tr>
-            {% endif %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% if fournisseurs %}
+                    {% for f in fournisseurs %}
+                    <tr class="searchable">
+                        <td>{{ f.nom_du_contractant }}</td>
+                        <td>{{ f.email }}</td>
+                        <td>{{ f.telephone }}</td>
+                        <td>{{ f.ville }}</td>
+                        <td>{{ f.date_exclusion }}</td>
+                        <td>{{ f.duree_exclusion }}</td>
+                        <td>{{ f.date_levee_sanction }}</td>
+                        <td>{{ f.motifs|truncatewords:10 }}</td>
+                        <td>{{ f.remarques|truncatewords:10 }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucun fournisseur blacklisté trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- Bouton d'ajout -->

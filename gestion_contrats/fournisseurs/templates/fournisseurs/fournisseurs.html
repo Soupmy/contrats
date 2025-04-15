@@ -5,62 +5,72 @@
 {% block content %}
     <h2>Liste des Fournisseurs</h2>
 
-    <!-- Barre de recherche -->
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Rechercher un fournisseur..." class="search-input">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    <div class="search-export-wrapper">
+        <!-- Barre de recherche -->
+        <div class="search-container-fournisseur">
+            <input type="text" id="searchInput" placeholder="Rechercher un fournisseur..." class="search-input">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
+        
+        <!-- Bouton d'export -->
+        <div style="margin-left: auto;">
+            <div class="export-container" >
+                <a href="{% url 'export_fournisseurs' %}" class="btn btn-export-excel">
+                    <i class="fa-solid fa-file-excel"></i>
+                    Exporter vers Excel
+                </a>
+        </div>
+        </div>
     </div>
-
-    <a href="{% url 'export_fournisseurs' %}" class="btn btn-primary">
-         Exporter les fournisseurs
-    </a>
       
 
     <div class="table-container">
-        <table id="fournisseursTable">
-            <thead>
-                <tr>
-                    <th>Nom du Contractant</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Ville</th>
-                    <th>NIF</th>
-                    <th>Activité</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if fournisseurs %}
-                    {% for fournisseur in fournisseurs %}
-                    <tr class="searchable">
-                        <td>{{ fournisseur.nom_du_contractant }}</td>
-                        <td>{{ fournisseur.email }}</td>
-                        <td>{{ fournisseur.telephone }}</td>
-                        <td>{{ fournisseur.ville }}</td>
-                        <td>{{ fournisseur.nif }}</td>
-                        <td>{{ fournisseur.activite }}</td>
-                        <td class="actions">
-                            <a href="#"  class="icon-btn" onclick="openDetailsPopup({{ fournisseur.id}})">
-                                <i class="fa-solid fa-eye"></i>
-                                <span class="tooltip">Détails</span>
-                            </a>
-                            <a href="#" class="icon-btn" onclick="openEditPopup({{ fournisseur.id }})">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                                <span class="tooltip">Modifier</span></a>
-                            <a href="#" class="icon-btn" onclick="openDeletePopup({{ fournisseur.id }})">
-                                <i class="fa-solid fa-trash"></i>
-                                <span class="tooltip">Supprimer</span>
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
+        <div class="table-scroll">
+            <table id="fournisseursTable">
+                <thead>
                     <tr>
-                        <td colspan="7">Aucun fournisseur trouvé.</td>
+                        <th>Nom du Contractant</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Ville</th>
+                        <th>NIF</th>
+                        <th>Activité</th>
+                        <th>Actions</th>
                     </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% if fournisseurs %}
+                        {% for fournisseur in fournisseurs %}
+                        <tr class="searchable">
+                            <td>{{ fournisseur.nom_du_contractant }}</td>
+                            <td>{{ fournisseur.email }}</td>
+                            <td>{{ fournisseur.telephone }}</td>
+                            <td>{{ fournisseur.ville }}</td>
+                            <td>{{ fournisseur.nif }}</td>
+                            <td>{{ fournisseur.activite }}</td>
+                            <td class="actions">
+                                <a href="#"  class="icon-btn" onclick="openDetailsPopup({{ fournisseur.id}})">
+                                    <i class="fa-solid fa-eye"></i>
+                                    <span class="tooltip">Détails</span>
+                                </a>
+                                <a href="#" class="icon-btn" onclick="openEditPopup({{ fournisseur.id }})">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span class="tooltip">Modifier</span></a>
+                                <a href="#" class="icon-btn" onclick="openDeletePopup({{ fournisseur.id }})">
+                                    <i class="fa-solid fa-trash"></i>
+                                    <span class="tooltip">Supprimer</span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7">Aucun fournisseur trouvé.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
     </div>
 
 <button id="openPopup" class="btn btn-ajouter">Ajouter un Fournisseur</button>
