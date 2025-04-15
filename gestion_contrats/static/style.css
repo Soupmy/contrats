@@ -84,23 +84,28 @@ tbody tr:hover {
   gap: 8px;
 }
 
-.btn-ajouter,
-.btn-primary {
+.btn-ajouter {
   background: #FF6B00;
   color: white;
   padding: 16px 28px;
   font-size: 1rem;
-  border: none;
-  border-radius: 50px;
   box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  border-radius: 50px;
+  z-index: 2001;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-.btn-ajouter:hover,
-.btn-primary:hover {
+.btn-ajouter:hover {
   background: #E55E00;
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
   box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4);
 }
 
@@ -109,8 +114,6 @@ tbody tr:hover {
   gap: 8px;
   justify-content: flex-end;
 }
-
-
 
 /* =================== POPUP STYLES =================== */
 .popup {
@@ -183,18 +186,12 @@ tbody tr:hover {
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  margin-top: 20px;
+  gap: 50px;
 }
 
 .form-grid-add {
   display: grid;
   gap: 50px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
 }
 
 .form-group input:focus {
@@ -208,8 +205,7 @@ tbody tr:hover {
   border-radius: 12px;
   width: 95%;
   max-width: 700px;
-  margin: 20px auto;
-  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+  margin: 0 auto 20px auto;
 }
 
 
@@ -238,9 +234,10 @@ tbody tr:hover {
 }
 
 .form-group label {
+  display: block;
+  margin-bottom: 8px;
   font-weight: 500;
   color: #2d3436;
-  margin-bottom: 5px;
 }
 
 .form-group input,
@@ -264,24 +261,16 @@ tbody tr:hover {
 
 /* Styles spécifiques pour  modifs */
 .form-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    width: 100%;
 }
 
 .required {
   color: red;
   font-weight: bold;
 }
-
-input:invalid {
-    border: 2px solid red;
-}
-
-input:valid {
-    border: 2px solid green;
-}
-
 
 
 /* Adaptation responsive */
@@ -438,6 +427,10 @@ input:valid {
   z-index: 1; /* Le plus élevé */
 }
 
+/*Ajouter slide lateral et rectifier les autres popups
+modifier bouton ajouter classe btn-ajouter
+ajouter slide lateral popup
+*/
 /* =================== FILTRE SPÉCIFIQUE =================== */
 
 /* Style de base du champ filtre */
@@ -471,4 +464,12 @@ input:valid {
 .filter-active {
   background: #FF6B00 !important; /* Couleur orange */
   color: white !important;
+}
+
+input:invalid {
+  border-color: red;
+}
+
+input:valid {
+  border-color: green;
 }
