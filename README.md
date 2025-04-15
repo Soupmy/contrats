@@ -20,22 +20,22 @@ GRANT EXECUTE ON DBMS_SCHEDULER TO MON_UTILISATEUR;
 
 BEGIN
   DBMS_SCHEDULER.create_job (
-    job_name        => 'LEVER_SANCTIONS_JOB',
+    job_name        => 'LEVER_LA_SANCTIONS_JOB',
     job_type        => 'PLSQL_BLOCK',
     job_action      => 'BEGIN 
                           UPDATE JURIDIQUE_FOURNISSEUR 
-                          SET statut = ''HABILITE'',
+                          SET ETAT = ''HABILITE'',
                               DATE_EXCLUSION = NULL,
                               DUREE_EXCLUSION = NULL,
                               DATE_LEVEE_SANCTION = NULL,
                               STRUCTURE_AYANT_EXCLU = NULL
                           WHERE DATE_LEVEE_SANCTION <= SYSDATE
-                          AND statut = ''BLACKLISTE'';
+                          AND ETAT = ''BLACKLISTE'';
                         END;',
     start_date      => SYSTIMESTAMP,
-    repeat_interval => 'FREQ=MINUTELY; INTERVAL=30',
+    repeat_interval => 'FREQ=DAILY', -- Exécution quotidienne
     enabled         => TRUE,
-    comments        => 'Job qui lève les sanctions et nettoie les champs associés toutes les 30 minutes'
+    comments        => 'Mise à jour quotidienne des sanctions'
   );
 END;
 /
