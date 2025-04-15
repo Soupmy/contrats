@@ -85,6 +85,7 @@ def blacklist_view(request):
     fournisseurs_disponibles = JuridiqueFournisseur.objects.filter(etat='HABILITE')
     
     context = {
+        'filtre': filtre,
         'fournisseurs': fournisseurs,
         'fournisseurs_disponibles': fournisseurs_disponibles,
     }

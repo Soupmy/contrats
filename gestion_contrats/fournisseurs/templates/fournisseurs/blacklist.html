@@ -8,10 +8,11 @@
 
 <!-- Filtres -->
 <div style="margin-bottom: 20px;">
-    <a href="?filtre=all" class="btn btn-details">Tous</a>
-    <a href="?filtre=temporaire" class="btn btn-details">Blacklistés temporairement</a>
-    <a href="?filtre=a_vie" class="btn btn-details">Blacklistés à vie</a>
+    <a href="?filtre=all" class="btn btn-filter {% if filtre == 'all' %}filter-active{% endif %}">Tous</a>
+    <a href="?filtre=temporaire" class="btn btn-filter {% if filtre == 'temporaire' %}filter-active{% endif %}">Blacklistés temporairement</a>
+    <a href="?filtre=a_vie" class="btn btn-filter {% if filtre == 'a_vie' %}filter-active{% endif %}">Blacklistés à vie</a>
 </div>
+
 
 <!-- Tableau des fournisseurs blacklistés -->
 <div class="table-container">
@@ -129,7 +130,7 @@
                 
                 <button type="submit" class="btn btn-ajouter">Confirmer</button>
             </form>
-        </div>
+            </div>
     </div>
 </div>
 
@@ -181,6 +182,18 @@ document.querySelectorAll('.close-btn').forEach(btn => {
         closePopup(btn.closest('.popup').id);
     });
 });
+// Gestion de l'apparence des boutons de filtre
+document.querySelectorAll('.btn-filter').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+
+          // Retire filter-active de tous les boutons
+          document.querySelectorAll('.btn-filter').forEach(el => el.classList.remove('filter-active'));
+          
+          // Ajoute filter-active sur le bouton cliqué
+          this.classList.add('filter-active');
+      });
+  });
+
 </script>
 
 {% endblock %}

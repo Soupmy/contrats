@@ -51,7 +51,7 @@ function openDetailsPopup(fournisseurId) {
                 contentContainer.appendChild(formGroup);
             }
 
-            document.getElementById('detailsPopup').style.display = 'block';
+            document.getElementById('detailsPopup').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         })
         .catch(error => {
@@ -67,6 +67,7 @@ function closeDetailsPopup() {
     
     document.getElementById('openDetailsPopup').addEventListener('click', function () {
         document.getElementById('detailsPopup').style.display = 'block';
+        document.body.style.overflow = 'auto';
     });
 
     document.querySelector('.close').addEventListener('click', function() {

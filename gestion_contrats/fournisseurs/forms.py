@@ -5,9 +5,24 @@ class FournisseurForm(forms.ModelForm):
     class Meta:
         model = JuridiqueFournisseur
         exclude = [
-            'date_exclusion', 'duree_exclusion', 'date_levee_sanction', 
-            'structure_ayant_exclu', 'motifs', 'etat', 'type', 'motifs', 'remarques'
-        ] 
+            'date_exclusion', 'duree_exclusion', 'date_levee_sanction',
+            'structure_ayant_exclu', 'motifs', 'etat', 'type', 'remarques'
+        ]
+        widgets = {
+            'email': forms.EmailInput(attrs={'placeholder': 'ex: nom@exemple.com', 'required': 'required'}),
+            'telephone': forms.TextInput(attrs={'type': 'tel', 'placeholder': 'Ex: 0555 55 55 55', 'required': 'required'}),
+            'nif': forms.TextInput(attrs={'pattern': '[0-9]{15}', 'placeholder': 'Numéro NIF à 15 chiffres'}),
+            'date_exclusion': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        required_fields = ['nom_du_contractant', 'num_fixe' , 'email', 'nif', 'activite', 'adresse', 'wilaya', 'ville', 'forme_jurdique', ]
+        for name, field in self.fields.items():
+            if name in required_fields:
+                field.required = True
+                field.widget.attrs['required'] = 'required'
+
 
 
 class BlacklistFournisseurForm(forms.Form):

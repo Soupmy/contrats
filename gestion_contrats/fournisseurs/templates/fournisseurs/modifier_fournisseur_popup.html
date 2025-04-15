@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 <div id="editPopup" class="popup" style="display: none;">
     <div class="popup-content">
         <span class="close" onclick="closeEditPopup()">&times;</span>
@@ -6,12 +8,34 @@
             <form id="editForm" method="post" class="form-popup">
                 {% csrf_token %}
                 <input type="hidden" name="_method" value="PUT">
-                <div id="editFormContent"><!-- Les champs seront chargés ici --></div>
-                <button type="submit" class="btn btn-modifier">Enregistrer</button>
-            </form>
+            
+                <div class="form-grid" id="editFormContent">
+                    {% for row in field_values|batch:2 %}
+                        <div class="form-row">
+                            {% for field, value in row %}
+                                <div class="form-group">
+                                    <label for="{{ field }}">
+                                        {{ field }}
+                                        {% if field in required_fields %}
+                                            <span style="color: red; margin-left: 4px;">*</span>
+                                        {% endif %}
+                                    </label>
+                                    <input type="text" 
+                                           name="{{ field }}"
+                                           value="{{ value }}"
+                                           class="editable-field">
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            
+                <button type="submit" class="btn-ajouter btn-primary">Enregistrer</button>
+            </form>            
         </div>        
     </div>
 </div>
+
 
 <script>
     function openEditPopup(fournisseurId) {
@@ -20,7 +44,7 @@
             .then(data => {
                 document.getElementById('editFormContent').innerHTML = data; // Injecte les champs ici
                 document.getElementById('editForm').action = `/fournisseurs/modifier/${fournisseurId}/`;
-                document.getElementById('editPopup').style.display = 'block';
+                document.getElementById('editPopup').style.display = 'flex';
             });
     }
 
