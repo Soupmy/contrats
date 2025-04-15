@@ -503,7 +503,72 @@ ajouter slide lateral popup
   color: #FF6B00;
 }
 
-/* Ajouter une recherche a mes pages par nom du fournisseur 
-   Ajouter une extraction sous format excel
-   
-*/
+.warning-icon {
+  font-size: 2.5rem;
+  color: #FF6B00;
+  margin-bottom: 20px;
+}
+
+.popup-title {
+  color: #2d3436;
+  margin: 15px 0;
+  font-weight: 600;
+}
+
+.confirmation-message {
+  margin: 25px 0;
+  line-height: 1.6;
+}
+
+.fournisseur-name {
+  font-weight: 600;
+  color: #FF6B00;
+  margin: 15px 0;
+  padding: 10px;
+  background: #fff5f0;
+  border-radius: 8px;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-neutral {
+  background: #f8f9fa;
+  color: #666;
+  border: 1px solid #e0e0e0;
+  flex: 1;
+}
+
+.btn-danger {
+  background: #FF6B00;
+  color: white;
+  flex: 1;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #E55E00;
+  transform: translateY(-1px);
+}
+
+.text-center{
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .button-group {
+      flex-direction: column;
+  }
+  
+  .btn {
+      width: 100%;
+  }
+}
+
+/* css du bouton export 
+ajouter de l'overflow pour une scrollbar horizontale dans mes listes*/

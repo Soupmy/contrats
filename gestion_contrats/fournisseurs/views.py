@@ -1,13 +1,116 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import JuridiqueFournisseur
 from .forms import FournisseurForm, BlacklistFournisseurForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 import datetime
 from django.contrib.auth.decorators import login_required
 from django.utils.dateparse import parse_date
+from openpyxl import Workbook
 
 # Create your views here.
+
+# Exportation en fichier excell
+@login_required
+def export_blacklist_excel(request):
+# Création du fichier
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Fournisseur"
+    # En-tetes
+    ws.append(["ID", "NOM_DU_CONTRACTANT", "NUM_FIXE", "EMAIL", "NIF", "DATE_EXCLUSION", "DUREE_EXCLUSION", "DATE_LEVEE_SANCTION", "ETAT", "TYPE", "STRUCTURE_AYANT_EXCLU", "MOTIFS", "REMARQUES", "ACTIVITE", "ADRESSE", "VILLE", "CODE_POSTAL", "WILAYA", "TELEPHONE"])
+
+    for f in JuridiqueFournisseur.objects.all():
+        ws.append([
+            f.id,
+            f.nom_du_contractant,
+            f.num_fixe,
+            f.email,
+            f.nif,
+            f.date_exclusion,
+            f.duree_exclusion,
+            f.date_levee_sanction,
+            f.etat,
+            f.type,
+            f.structure_ayant_exclu,
+            f.motifs,
+            f.remarques,
+            f.activite,
+            f.adresse,
+            f.ville,
+            f.code_postal,
+            f.wilaya,
+            f.telephone,
+        ])
+
+    # Préparer la réponse HTTP pour le téléchargement
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=fournisseurs-blacklists.xlsx'
+    wb.save(response)
+    return response
+
+
+# Exportation en fichier excell
+@login_required
+def export_fournisseurs_excel(request):
+    # Création du fichier
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Fournisseur"
+    # En-tetes
+    ws.append(["ID", "NOM_DU_CONTRACTANT", "NUM_FIXE", "FAX", "EMAIL", "NIF", "DATE_EXCLUSION", "DUREE_EXCLUSION", "DATE_LEVEE_SANCTION", "ETAT", "TYPE", "STRUCTURE_AYANT_EXCLU", "MOTIFS", "REMARQUES", "ACTIVITE", "ADRESSE", "VILLE", "CODE_POSTAL", "WILAYA", "N_IDENTIFICATION_FISCALE", "N_IDENTIFICATION_STATISTIQUE", "N_REGISTRE_COMMERCE", "ARTICLE_IMPOSITION", "SYSTEME_NUMEROTATION_UNIVERSEL", "CARTE_ARTISANT",	"NUM_AGREMENT", "CRIT_RECH_1", "RUE", "NUMERO", "TELEPHONE", "TELEPHONE_2", "FORME_JURDIQUE",	"BRANCHE",	"TYPE_PARTENAIRE",	"CLE_PAYS_BANQUE",	"CLE_BANCAIRE",	"COMPTE_BANCAIRE",	"CLE_CONTROLE_BANCAIRE",])
+
+    for f in JuridiqueFournisseur.objects.all():
+        ws.append([
+            f.id,
+            f.nom_du_contractant,
+            f.num_fixe,
+            f.fax,
+            f.email,
+            f.nif,
+            f.date_exclusion,
+            f.duree_exclusion,
+            f.date_levee_sanction,
+            f.etat,
+            f.type,
+            f.structure_ayant_exclu,
+            f.motifs,
+            f.remarques,
+            f.activite,
+            f.adresse,
+            f.ville,
+            f.code_postal,
+            f.wilaya,
+            f.n_identification_fiscale,
+            f.n_identification_statistique,
+            f.n_registre_commerce,
+            f.article_imposition,
+            f.systeme_numerotation_universel,
+            f.carte_artisant,
+            f.num_agrement,
+            f.crit_rech_1,
+            f.rue,
+            f.numero,
+            f.telephone,
+            f.telephone_2,
+            f.forme_jurdique,
+            f.branche,
+            f.type_partenaire,
+            f.cle_pays_banque,
+            f.cle_bancaire,
+            f.compte_bancaire,
+            f.cle_controle_bancaire,
+        ])
+
+    # Préparer la réponse HTTP pour le téléchargement
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=fournisseurs.xlsx'
+    wb.save(response)
+    return response
 
 # Affichage fournisseurs et ajout 
 @login_required

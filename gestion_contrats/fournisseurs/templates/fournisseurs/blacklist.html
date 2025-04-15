@@ -13,10 +13,21 @@
     <a href="?filtre=a_vie" class="btn btn-filter {% if filtre == 'a_vie' %}filter-active{% endif %}">Blacklistés à vie</a>
 </div>
 
+<a href="{% url 'export_blacklists' %}" class="btn btn-primary">
+    Exporter les fournisseurs blacklistés
+  </a>
+  
+
+<!-- Barre de recherche -->
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Rechercher un fournisseur..." class="search-input">
+    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+</div>
+
 
 <!-- Tableau des fournisseurs blacklistés -->
 <div class="table-container">
-    <table>
+    <table id="blacklistTable">
         <thead>
             <tr>
                 <th>Nom du Contractant</th>
@@ -33,7 +44,7 @@
         <tbody>
             {% if fournisseurs %}
                 {% for f in fournisseurs %}
-                <tr>
+                <tr class="searchable">
                     <td>{{ f.nom_du_contractant }}</td>
                     <td>{{ f.email }}</td>
                     <td>{{ f.telephone }}</td>
@@ -193,6 +204,28 @@ document.querySelectorAll('.btn-filter').forEach(btn => {
           this.classList.add('filter-active');
       });
   });
+
+  // Fonctionnalité de recherche
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#blacklistTable tbody tr.searchable');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let found = false;
+                
+                // Recherche dans toutes les col
+                [0, 1, 2, 3].forEach(index => {
+                    const cellText = cells[index].textContent.toLowerCase();
+                    if (cellText.includes(searchTerm)) {
+                        found = true;
+                    }
+                });
+
+                row.style.display = found ? '' : 'none';
+            });
+        });
+
 
 </script>
 

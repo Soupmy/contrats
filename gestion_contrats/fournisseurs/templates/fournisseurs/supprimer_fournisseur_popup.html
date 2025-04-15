@@ -1,26 +1,42 @@
-<div id="deletePopup" class="popup supp-popup"  style="display: none;"> 
+<div id="deletePopup" class="popup">
     <div class="popup-content">
         <span class="close" onclick="closeDeletePopup()">&times;</span>
-            <div class="popup-body">
-            <h2>Supprimer le fournisseur ?</h2>
-            <p>Voulez-vous vraiment supprimer ce fournisseur "<span id="nomFournisseur"></span>" ? Cette action est irréversible.</p>
-            <form id='deleteForm' method="post">
+        <div class="popup-body text-center">
+            <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+            <h2 class="popup-title">Confirmer la suppression</h2>
+            
+            <div class="confirmation-message">
+                <p>Êtes-vous sûr de vouloir supprimer définitivement :</p>
+                <div class="fournisseur-name" id="nomFournisseur"></div>
+                <p class="text-muted">Cette action ne peut être annulée</p>
+            </div>
+
+            <form id='deleteForm' method="post" class="confirmation-actions">
                 {% csrf_token %}
                 <input type="hidden" name="_method" value="DELETE">
-                <div class="confirmation">
-                    <button type="button" class="btn btn-neutre" onclick="closeDeletePopup()">Annuler</button>
-                    <button type="submit" class="btn btn-supprimer">Supprimer</button>
+                <div class="button-group">
+                    <button type="button" class="btn btn-neutral" onclick="closeDeletePopup()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash-can"></i>
+                        Supprimer
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
 <script>
     let fournisseurIdToDelete = null;
 
     function openDeletePopup(fournisseurId) {
+    const popup = document.getElementById('deletePopup');
+    popup.style.display = 'flex';
+    setTimeout(() => {
+        popup.classList.add('active');
+    }, 10);
         console.log("Ouverture du popup pour fournisseur ID:", fournisseurId);
         fournisseurIdToDelete = fournisseurId;
 
@@ -43,8 +59,12 @@
     }
 
     function closeDeletePopup() {
-        document.getElementById('deletePopup').style.display = 'none';
-    }
+    const popup = document.getElementById('deletePopup');
+    popup.classList.remove('active');
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 300);
+    }   
 
     document.getElementById('deleteForm').addEventListener('submit', function (event) {
         event.preventDefault();
@@ -68,10 +88,15 @@
             }
         });
     });
-    document.querySelectorAll('.close-btn').forEach(btn => {
+    document.querySelectorAll('.close').forEach(btn => {
     btn.addEventListener('click', () => {
         closePopup(btn.closest('.popup').id);
     });
 });
+document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closePopup(btn.closest('.popup').id);
+        }
+    });
 </script>
 
