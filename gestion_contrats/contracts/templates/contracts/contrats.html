@@ -1,8 +1,69 @@
-{% extends 'base.html' %}
 
-{% block title %}Page 2 - Contrats{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Contrats{% endblock %}
 
 {% block content %}
-    <h2>Bienvenue sur la page des contrats</h2>
-    <p>Voici la liste des contrats.</p>
+    <h2>Liste des Contrats</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Intitulé</th>
+                    <th>Type</th>
+                    <th>Référence</th>
+                    <th>Contractant</th>
+                    <th>Montant (DA)</th>
+                    <th>Date signature</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if contrats %}
+                    {% for contrat in contrats %}
+                    <tr>
+                        <td>{{ contrat.intitul }}</td>
+                        <td>{{ contrat.get_type_du_contrat_display }}</td>
+                        <td>{{ contrat.reference_du_contrat }}</td>
+                        <td>{{ contrat.id_contractant }}</td>
+                        <td>{{ contrat.montant_contrat_da }}</td>
+                        <td>{{ contrat.date_reel_sign_cont }}</td>
+                        <td class="actions">
+                            <a href="#" class="icon-btn" onclick="openDetailsPopup({{ contrat.id }})">
+                                <i class="fa-solid fa-eye"></i>
+                                <span class="tooltip">Détails</span>
+                            </a>
+                            <a href="#" class="icon-btn" onclick="openEditPopup({{ contrat.id }})">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span class="tooltip">Modifier</span>
+                            </a>
+                            <a href="#" class="icon-btn" onclick="openDeletePopup({{ contrat.id }})">
+                                <i class="fa-solid fa-trash"></i>
+                                <span class="tooltip">Supprimer</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucun contrat trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <button id="openPopup" class="btn btn-ajouter">Ajouter un Contrat</button>
+
+    <!-- Pop-up pour les détails -->
+    {% include 'contracts/detail_contrat_popup.html' %}
+
+    <!-- Pop-up pour la modification -->
+    {% include 'contracts/modifier_contrat_popup.html' %}
+
+    <!-- Popup pour supprimer un contrat -->
+    {% include 'contracts/supprimer_contrat_popup.html' %}
+
+    <!-- Popup pour ajouter un contrat -->
+    {% include 'contracts/ajouter_contrat_popup.html' %}
 {% endblock %}

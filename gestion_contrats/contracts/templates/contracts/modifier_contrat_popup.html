@@ -1,0 +1,161 @@
+<!--
+<div id="editContratPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closeEditPopup()">&times;</span>
+        <h2>Modifier le Contrat</h2>
+        <div class="popup-body">
+            <form id="editForm" method="post" class="form-popup" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <div id="editFormContent"></div>
+                <button type="submit" class="btn btn-modifier">Enregistrer</button>
+            </form>
+        </div>        
+    </div>
+</div>
+
+<script>
+    function openEditPopup(contratId) {
+        fetch(`/contrats/modifier/${contratId}/`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('editFormContent').innerHTML = data; // Injecte les champs ici
+                document.getElementById('editForm').action = `/contrats/modifier/${contratId}/`;
+                document.getElementById('editContratPopup').style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+    }
+
+    function closeEditPopup() {
+        document.getElementById('editContratPopup').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST', // Django interprétera PUT via _method
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload(); // Recharger la page après modification
+            } else {
+                alert("Erreur lors de la modification !");
+            }
+        });
+    });
+
+    document.querySelector('#editContratPopup .close').addEventListener('click', closeEditPopup);
+
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('editContratPopup')) {
+            closeEditPopup();
+        }
+    });
+</script> -->
+<div id="editContratPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closeEditPopup()">&times;</span>
+        <h2>Modifier le Contrat</h2>
+        <div class="popup-body">
+            <form id="editForm" method="post" class="form-popup" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <div id="editFormContent">
+                    <!-- Le contenu sera chargé dynamiquement -->
+                    <div class="loading">Chargement...</div>
+                </div>
+                <button type="submit" class="btn btn-modifier">Enregistrer</button>
+            </form>
+        </div>        
+    </div>
+</div>
+
+<script>
+    function openEditPopup(contratId) {
+        // Afficher le popup immédiatement avec un message de chargement
+        document.getElementById('editContratPopup').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        fetch(`/contrats/modifier/${contratId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur réseau: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('editFormContent').innerHTML = data;
+                document.getElementById('editForm').setAttribute('data-id', contratId);
+            })
+            .catch(error => {
+                console.error("Erreur modification:", error);
+                document.getElementById('editFormContent').innerHTML = 
+                    '<div class="error-message">Erreur lors du chargement du formulaire</div>';
+            });
+    }
+
+    function closeEditPopup() {
+        document.getElementById('editContratPopup').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('editForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const contratId = this.getAttribute('data-id');
+            
+            if (!contratId) {
+                console.error("ID du contrat manquant");
+                return;
+            }
+
+            fetch(`/contrats/modifier/${contratId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur réseau: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert("Erreur lors de la modification : " + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => {
+                console.error("Erreur soumission:", error);
+                alert("Erreur lors de la modification du contrat");
+            });
+        });
+
+        // Fermeture avec le bouton X
+        const closeBtn = document.querySelector('#editContratPopup .close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeEditPopup);
+        }
+
+        // Fermeture en cliquant en dehors du popup
+        window.addEventListener('click', function(event) {
+            if (event.target == document.getElementById('editContratPopup')) {
+                closeEditPopup();
+            }
+        });
+    });
+</script>

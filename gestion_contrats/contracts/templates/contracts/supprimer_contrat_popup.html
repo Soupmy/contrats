@@ -1,0 +1,182 @@
+<!--
+<div id="deleteContratPopup" class="popup supp-popup" style="display: none;"> 
+    <div class="popup-content">
+        <span class="close" onclick="closeDeletePopup()">&times;</span>
+        <div class="popup-body">
+            <h2>Supprimer le contrat ?</h2>
+            <p>Voulez-vous vraiment supprimer ce contrat "<span id="nomContrat"></span>" ? Cette action est irréversible.</p>
+            <form id='deleteForm' method="post">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="DELETE">
+                <div class="confirmation">
+                    <button type="button" class="btn btn-neutre" onclick="closeDeletePopup()">Annuler</button>
+                    <button type="submit" class="btn btn-supprimer">Supprimer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let contratIdToDelete = null;
+
+    function openDeletePopup(contratId) {
+        console.log("Ouverture du popup pour contrat ID:", contratId);
+        contratIdToDelete = contratId;
+
+        // Récupérer le nom du contrat via une requête AJAX
+        fetch(`/contrats/supprimer/${contratId}/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Injecter le nom dans le popup
+            document.getElementById('nomContrat').textContent = data.contrat;
+            document.getElementById('deleteContratPopup').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Erreur lors du chargement du contrat");
+        });
+    }
+
+    function closeDeletePopup() {
+        document.getElementById('deleteContratPopup').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('deleteForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (!contratIdToDelete) return;
+
+        fetch(`/contrats/supprimer/${contratIdToDelete}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: '_method=DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert("Erreur lors de la suppression.");
+            }
+        });
+    });
+
+    document.querySelector('#deleteContratPopup .close').addEventListener('click', closeDeletePopup);
+
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('deleteContratPopup')) {
+            closeDeletePopup();
+        }
+    });
+</script> -->
+<div id="deleteContratPopup" class="popup supp-popup" style="display: none;"> 
+    <div class="popup-content">
+        <span class="close" onclick="closeDeletePopup()">&times;</span>
+        <div class="popup-body">
+            <h2>Supprimer le contrat ?</h2>
+            <p>Voulez-vous vraiment supprimer ce contrat "<span id="nomContrat"></span>" ? Cette action est irréversible.</p>
+            <form id="deleteForm" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="DELETE">
+                <div class="confirmation">
+                    <button type="button" class="btn btn-neutre" onclick="closeDeletePopup()">Annuler</button>
+                    <button type="submit" class="btn btn-supprimer">Supprimer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    let contratIdToDelete = null;
+
+    function openDeletePopup(contratId) {
+        contratIdToDelete = contratId;
+        
+        // Afficher le popup immédiatement avec le nom générique en attendant
+        document.getElementById('nomContrat').textContent = `Contrat #${contratId}`;
+        document.getElementById('deleteContratPopup').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+
+        // Récupérer le nom exact du contrat
+        fetch(`/contrats/supprimer/${contratId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur réseau: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('nomContrat').textContent = data.contrat;
+            })
+            .catch(error => {
+                console.error("Erreur récupération nom:", error);
+            });
+    }
+
+    function closeDeletePopup() {
+        document.getElementById('deleteContratPopup').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        contratIdToDelete = null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('deleteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (!contratIdToDelete) return;
+
+            const formData = new FormData();
+            formData.append('_method', 'DELETE');
+            
+            fetch(`/contrats/supprimer/${contratIdToDelete}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur réseau: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert("Erreur lors de la suppression.");
+                }
+            })
+            .catch(error => {
+                console.error("Erreur suppression:", error);
+                alert("Erreur lors de la suppression du contrat");
+            });
+        });
+
+        // Fermeture avec le bouton X
+        const closeBtn = document.querySelector('#deleteContratPopup .close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDeletePopup);
+        }
+
+        // Fermeture en cliquant en dehors du popup
+        window.addEventListener('click', function(event) {
+            if (event.target == document.getElementById('deleteContratPopup')) {
+                closeDeletePopup();
+            }
+        });
+    });
+</script>

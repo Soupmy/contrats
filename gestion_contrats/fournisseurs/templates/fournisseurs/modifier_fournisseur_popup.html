@@ -1,12 +1,15 @@
-<div id="editPopup" class="popup" style="display: none;">
+<div id="editContratPopup" class="popup" style="display: none;">
     <div class="popup-content">
         <span class="close" onclick="closeEditPopup()">&times;</span>
-        <h2>Modifier le Fournisseur</h2>
+        <h2>Modifier le Contrat</h2>
         <div class="popup-body">
-            <form id="editForm" method="post" class="form-popup">
+            <form id="editForm" method="post" class="form-popup" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="_method" value="PUT">
-                <div id="editFormContent"><!-- Les champs seront chargés ici --></div>
+                <div id="editFormContent">
+                    <!-- Le contenu sera chargé dynamiquement -->
+                    <div class="loading">Chargement...</div>
+                </div>
                 <button type="submit" class="btn btn-modifier">Enregistrer</button>
             </form>
         </div>        
@@ -14,44 +17,84 @@
 </div>
 
 <script>
-    function openEditPopup(fournisseurId) {
-        fetch(`/fournisseurs/modifier/${fournisseurId}/`)
-            .then(response => response.text())
+    function openEditPopup(contratId) {
+        // Afficher le popup immédiatement avec un message de chargement
+        document.getElementById('editContratPopup').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        fetch(`/contrats/modifier/${contratId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur réseau: ${response.status}`);
+                }
+                return response.text();
+            })
             .then(data => {
-                document.getElementById('editFormContent').innerHTML = data; // Injecte les champs ici
-                document.getElementById('editForm').action = `/fournisseurs/modifier/${fournisseurId}/`;
-                document.getElementById('editPopup').style.display = 'block';
+                document.getElementById('editFormContent').innerHTML = data;
+                document.getElementById('editForm').setAttribute('data-id', contratId);
+            })
+            .catch(error => {
+                console.error("Erreur modification:", error);
+                document.getElementById('editFormContent').innerHTML = 
+                    '<div class="error-message">Erreur lors du chargement du formulaire</div>';
             });
     }
 
     function closeEditPopup() {
-        document.getElementById('editPopup').style.display = 'none';
+        document.getElementById('editContratPopup').style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
 
-    document.getElementById('editForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-        const formData = new FormData(this);
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('editForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const contratId = this.getAttribute('data-id');
+            
+            if (!contratId) {
+                console.error("ID du contrat manquant");
+                return;
+            }
 
-        fetch(this.action, {
-            method: 'POST', // Django interprétera PUT via _method
-            body: formData,
-            headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.reload(); // Recharger la page après modification
-            } else {
-                alert("Erreur lors de la modification !");
+            // Correction de la méthode de soumission
+            fetch(`/contrats/modifier/${contratId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                    // Ne pas définir Content-Type lorsqu'on utilise FormData
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur réseau: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert("Erreur lors de la modification : " + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => {
+                console.error("Erreur soumission:", error);
+                alert("Erreur lors de la modification du contrat");
+            });
+        });
+
+        // Fermeture avec le bouton X
+        const closeBtn = document.querySelector('#editContratPopup .close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeEditPopup);
+        }
+
+        // Fermeture en cliquant en dehors du popup
+        window.addEventListener('click', function(event) {
+            if (event.target == document.getElementById('editContratPopup')) {
+                closeEditPopup();
             }
         });
-    });
-    document.querySelectorAll('.close-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        closePopup(btn.closest('.popup').id);
-    });
     });
 </script>

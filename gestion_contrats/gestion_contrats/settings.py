@@ -132,7 +132,7 @@ DATABASES = {
         'USER': 'django_user',
         'PASSWORD': 'oracle2025',
         'OPTIONS': {
-
+         #sqlplus django_user/oracle2025@localhost:1521/orclpdb
         },
     }
 }
