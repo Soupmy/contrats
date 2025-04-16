@@ -43,3 +43,10 @@ END;
 
 pour la conversion en fichier excell: 
 pip install openpyxl
+
+
+
+## Système de Notifications
+- Notification immédiate lors des changements d'état
+- Historique des 30 derniers jours
+- Double canal : Email + In-App

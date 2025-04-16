@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'evaluations', #contient les evals des contrats
     'accounts', #gestion des comptes avec django + liaison a unité
     'dashboard', # tableau de bord
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -78,17 +79,14 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
+        'console': {
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
-        'gestion_contrats': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
+        'notification.management': {
+            'handlers': ['console'],
+            'level': 'INFO',
         },
     },
 }
@@ -134,6 +132,11 @@ DATABASES = {
         'OPTIONS': {
 
         },
+        'TEST': {
+            'TBLSPACE': 'USERS',  # Utiliser un tablespace existant
+            'TBLSPACE_TMP': 'TEMP',  # Tablespace temporaire existant
+            'CREATE_USER': False,  # Désactiver la création d'utilisateur
+        }
     }
 }
 
@@ -205,3 +208,16 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'soumeya.dahman2004@gmail.com'
 EMAIL_HOST_PASSWORD = 'oracle2025'
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+# Désactiver la création de tablespace de test
+TEST_CREATE_USER = False  
+TEST_USER_CREATE_DB = False
+
+# Utiliser le même schéma utilisateur pour les tests
+TEST_USER = 'VOTRE_USER_ORACLE'
+TEST_ORACLE_TABLESPACE = 'VOTRE_TABLESPACE_EXISTANT'
