@@ -13,11 +13,91 @@
 <body>
     {% include 'sidebar.html' %}
 
+    <button class="notification-toggle">
+        🔔
+        {% if unread_count > 0 %}
+        <span class="notification-badge">{{ unread_count }}</span>
+        {% endif %}
+    </button>
+
+    <!-- Ajout du panneau de notifications -->
+    {% include 'notifications/notification_panel.html' %}
     <div class="main-content">
         {% block content %}
 
         {% endblock %}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion de l'affichage du panneau
+            const toggleBtn = document.querySelector('.notification-toggle');
+            const panel = document.querySelector('.notification-panel');
+            
+            toggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Fermer le panneau quand on clique ailleurs
+            document.addEventListener('click', function(e) {
+                if (!panel.contains(e.target) {
+                    panel.style.display = 'none';
+                }
+            });
+
+            // Gestion des clics sur les notifications
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    const notificationId = this.dataset.id;
+                    
+                    try {
+                        const response = await fetch(`/notifications/mark-as-read/${notificationId}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken'),
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if(response.ok) {
+                            this.classList.remove('unread');
+                            updateBadgeCount();
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+
+            // Fonction de mise à jour du badge
+            function updateBadgeCount() {
+                const badge = document.querySelector('.notification-badge');
+                if(badge) {
+                    const count = parseInt(badge.textContent) - 1;
+                    badge.textContent = count > 0 ? count : '';
+                    if(count <= 0) badge.remove();
+                }
+            }
+
+            // Fonction utilitaire CSRF
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.startsWith(name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        });
+    </script>
 
 </body>
 </html>

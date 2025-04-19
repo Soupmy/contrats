@@ -69,3 +69,20 @@ class NotificationModelTests(TestCase):
         )
         
         self.assertEqual(notification.icon_html(), '🔴')
+
+
+    def test_notification_on_blacklist_remove(self):
+        fournisseur = JuridiqueFournisseur.objects.create(
+            nom_du_contractant='Test Retrait',
+            etat='BLACKLISTE',
+            motifs='Test'
+        )
+        
+        # Modification vers HABILITE
+        fournisseur.etat = 'HABILITE'
+        fournisseur.save()
+        
+        self.assertEqual(Notification.objects.count(), 1)
+        notification = Notification.objects.first()
+        self.assertEqual(notification.type_notification, 'RETRAIT_BLACKLIST')
+        self.assertIn('retiré de la blacklist', notification.message)

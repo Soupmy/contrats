@@ -1,56 +1,56 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from fournisseurs.models import JuridiqueFournisseur  # Utiliser le bon nom de modèle
+from fournisseurs.models import JuridiqueFournisseur
 from notifications.models import Notification
+import logging
+
+logger = logging.getLogger(__name__)
+
+@receiver(pre_save, sender=JuridiqueFournisseur)
+def capture_previous_state(sender, instance, **kwargs):
+    """Capture l'état précédent avant sauvegarde"""
+    try:
+        instance._previous_state = JuridiqueFournisseur.objects.get(pk=instance.pk).etat
+    except JuridiqueFournisseur.DoesNotExist:
+        instance._previous_state = None
 
 @receiver(post_save, sender=JuridiqueFournisseur)
-def notify_blacklist_changes(sender, instance, created, **kwargs):
-    # Utiliser un flag pour déterminer si une notification doit être créée
-    # Cette information doit être stockée dans une variable d'instance
-    notification_created = getattr(instance, '_notification_created', False)
-    
-    if notification_created:
-        # Éviter de créer des notifications supplémentaires
+def handle_blacklist_changes(sender, instance, created, **kwargs):
+    """Gère les notifications de changement d'état"""
+    if created:
         return
-    
-    # Si c'est une modification (et non une création)
-    if not created:
-        # Retrouver l'état précédent (si possible)
-        try:
-            previous_state = getattr(instance, '_previous_state', None)
-            current_state = instance.etat
-            
-            # Ajout à la blacklist
-            if previous_state != 'BLACKLISTE' and current_state == 'BLACKLISTE':
-                message = f"Le fournisseur {instance.nom_du_contractant} a été ajouté à la blacklist"
-                if instance.motifs:
-                    message += f" pour cause de : {instance.motifs}"
-                
-                Notification.objects.create(
-                    fournisseur=instance,
-                    type_notification='AJOUT_BLACKLIST',  # Utiliser le bon type
-                    message=message,
-                    lue=False
-                )
-                
-                # Marquer que la notification a été créée
-                instance._notification_created = True
-            
-            # Retrait de la blacklist
-            elif previous_state == 'BLACKLISTE' and current_state != 'BLACKLISTE':
-                message = f"Le fournisseur {instance.nom_du_contractant} a été retiré de la blacklist"
-                
-                Notification.objects.create(
-                    fournisseur=instance,
-                    type_notification='RETRAIT_BLACKLIST',  # Utiliser le bon type
-                    message=message,
-                    lue=False
-                )
-                
-                # Marquer que la notification a été créée
-                instance._notification_created = True
+
+    previous_state = getattr(instance, '_previous_state', None)
+    current_state = instance.etat
+
+    # Récupérer un utilisateur admin (à adapter selon votre logique)
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    admin_user = User.objects.filter(is_superuser=True).first()
+
+    if not admin_user:
+        return
+
+    # Ajout à la blacklist
+    if previous_state != 'BLACKLISTE' and current_state == 'BLACKLISTE':
+        message = f"Le fournisseur {instance.nom_du_contractant} a été ajouté à la blacklist"
+        if instance.motifs:
+            message += f" pour cause de : {instance.motifs}"
         
-        except Exception as e:
-            # En cas d'erreur, ne pas bloquer la sauvegarde
-            pass
+        Notification.objects.create(
+            utilisateur=admin_user,
+            fournisseur=instance,
+            type_notification='AJOUT_BLACKLIST',
+            message=message
+        )
+
+    # Retrait de la blacklist
+    elif previous_state == 'BLACKLISTE' and current_state != 'BLACKLISTE':
+        message = f"Le fournisseur {instance.nom_du_contractant} a été retiré de la blacklist"
+        Notification.objects.create(
+            utilisateur=admin_user,
+            fournisseur=instance,
+            type_notification='RETRAIT_BLACKLIST',
+            message=message
+        )

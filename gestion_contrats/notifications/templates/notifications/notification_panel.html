@@ -1,0 +1,101 @@
+<div class="notification-panel">
+    <div class="notification-container">
+      <div class="notification-header">
+        <h3>Notifications</h3>
+        <span class="unread-count">{{ unread_count }} non lues</span>
+      </div>
+      
+      <div class="notification-list">
+        {% for notification in notifications %}
+        <div class="notification-item {% if not notification.lue %}unread{% endif %}">
+          <div class="notification-icon">
+            {% if notification.type_notification == 'AJOUT_BLACKLIST' %}
+              🔴
+            {% else %}
+              🟢
+            {% endif %}
+          </div>
+          <div class="notification-content">
+            <div class="notification-message">{{ notification.message }}</div>
+            <div class="notification-time">
+              <span>{{ notification.date_creation|timesince }}</span>
+              <span>{{ notification.date_creation|date:"d/m/Y H:i" }}</span>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="notification-empty">
+          Aucune notification
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  
+  <style>
+  
+  .notification-header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .unread-count {
+    background: #ff4444;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9em;
+  }
+  
+  .notification-list {
+    overflow-y: auto;
+    max-height: 60vh;
+  }
+  
+  .notification-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: start;
+    transition: background 0.2s;
+  }
+  
+  .notification-item.unread {
+    background: #f8f9fa;
+    border-left: 3px solid #007bff;
+  }
+  
+  .notification-item:hover {
+    background: #f1f1f1;
+  }
+  
+  .notification-icon {
+    font-size: 1.2em;
+    margin-right: 10px;
+  }
+  
+  .notification-content {
+    flex: 1;
+  }
+  
+  .notification-message {
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .notification-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    color: #666;
+  }
+  
+  .notification-empty {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+  }
+  </style>

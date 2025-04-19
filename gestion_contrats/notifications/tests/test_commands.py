@@ -24,7 +24,6 @@ class UnblacklistCommandTests(TestCase):
 
 class NotificationCommandTests(TestCase):
     def test_notification_command_output(self):
-        """Test le output de la commande de notification"""
         JuridiqueFournisseur.objects.create(
             nom_du_contractant='Test Notif',
             etat='BLACKLISTE',
@@ -34,4 +33,5 @@ class NotificationCommandTests(TestCase):
         with self.assertLogs('notification.management', level='INFO') as cm:
             call_command('notify_sanction_levee', '--jours-avant=3')
             
-        self.assertIn("1 notifications envoyées", cm.output[0])
+        self.assertIn("Nombre de fournisseurs trouvés : 1", cm.output[0])
+        self.assertIn("1 notifications créées", cm.output[1])
