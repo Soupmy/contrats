@@ -1,0 +1,28 @@
+<div id="detailsContratPopup" class="popup details-popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closePopup('detailsContratPopup')">&times;</span>
+        <h2>Détails du Contrat</h2>
+        <div class="popup-body">
+            <div class="form-popup">  <!-- Conteneur principal -->
+                <div class="form-grid" id="detailsContent">  
+                    <!-- Sera rempli dynamiquement par JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function closeDetailsContratPopup() {
+    document.getElementById('detailsContratPopup').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+document.querySelectorAll('.close-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        closePopup(btn.closest('.popup').id);
+    });
+});
+
+// La fonction openDetailsContratPopup est définie dans le fichier parent
+</script>

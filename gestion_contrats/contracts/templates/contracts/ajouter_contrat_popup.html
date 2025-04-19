@@ -1,0 +1,231 @@
+<div id="addContratPopup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>Ajouter un Contrat</h2>
+        <div class="popup-body">
+            <form method="post" action="{% url 'contrats' %}" class="form-popup" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <!-- Paire 1 : Identification -->
+                    <div class="form-group">
+                        <label for="{{ form.intitul.id_for_label }}">Intitulé du contrat</label>
+                        {{ form.intitul }}
+                        <small class="form-text text-danger">{{ form.intitul.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.reference_du_contrat.id_for_label }}">Référence du contrat</label>
+                        {{ form.reference_du_contrat }}
+                        <small class="form-text text-danger">{{ form.reference_du_contrat.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 2 : Typologie -->
+                    <div class="form-group">
+                        <label for="{{ form.type_du_contrat.id_for_label }}">Type du contrat</label>
+                        {{ form.type_du_contrat }}
+                        <small class="form-text text-danger">{{ form.type_du_contrat.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.nature.id_for_label }}">Nature</label>
+                        {{ form.nature }}
+                        <small class="form-text text-danger">{{ form.nature.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 3 : Localisation -->
+                    <div class="form-group">
+                        <label for="{{ form.nationalite.id_for_label }}">Nationalité</label>
+                        {{ form.nationalite }}
+                        <small class="form-text text-danger">{{ form.nationalite.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.unite.id_for_label }}">Unité</label>
+                        {{ form.unite }}
+                        <small class="form-text text-danger">{{ form.unite.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 4 : Fournisseur -->
+                    <div class="form-group">
+                        <label for="{{ form.id_contractant.id_for_label }}">Contractant</label>
+                        {{ form.id_contractant }}
+                        <small class="form-text text-danger">{{ form.id_contractant.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.filiale.id_for_label }}">Filiale</label>
+                        {{ form.filiale }}
+                        <small class="form-text text-danger">{{ form.filiale.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 5 : Dates importantes 1 -->
+                    <div class="form-group">
+                        <label for="{{ form.date_prev_attrib_contrat.id_for_label }}">Date prévue d'attribution</label>
+                        {{ form.date_prev_attrib_contrat }}
+                        <small class="form-text text-danger">{{ form.date_prev_attrib_contrat.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.date_reel_notif_attrib.id_for_label }}">Date réelle de notification</label>
+                        {{ form.date_reel_notif_attrib }}
+                        <small class="form-text text-danger">{{ form.date_reel_notif_attrib.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 6 : Dates importantes 2 -->
+                    <div class="form-group">
+                        <label for="{{ form.date_prev_signature_contrat.id_for_label }}">Date prévue de signature</label>
+                        {{ form.date_prev_signature_contrat }}
+                        <small class="form-text text-danger">{{ form.date_prev_signature_contrat.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.date_reel_sign_cont.id_for_label }}">Date réelle de signature</label>
+                        {{ form.date_reel_sign_cont }}
+                        <small class="form-text text-danger">{{ form.date_reel_sign_cont.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 7 : Durées -->
+                    <div class="form-group">
+                        <label for="{{ form.duree_contrat.id_for_label }}">Durée du contrat (jours)</label>
+                        {{ form.duree_contrat }}
+                        <small class="form-text text-danger">{{ form.duree_contrat.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.duree_attrib_contrat.id_for_label }}">Durée d'attribution (jours)</label>
+                        {{ form.duree_attrib_contrat }}
+                        <small class="form-text text-danger">{{ form.duree_attrib_contrat.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 8 : Financier 1 -->
+                    <div class="form-group">
+                        <label for="{{ form.montant_contrat_da.id_for_label }}">Montant du contrat (DA)</label>
+                        {{ form.montant_contrat_da }}
+                        <small class="form-text text-danger">{{ form.montant_contrat_da.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.montant_contrat_devise.id_for_label }}">Montant du contrat (devise)</label>
+                        {{ form.montant_contrat_devise }}
+                        <small class="form-text text-danger">{{ form.montant_contrat_devise.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 9 : Financier 2 -->
+                    <div class="form-group">
+                        <label for="{{ form.la_taxe.id_for_label }}">Taxe</label>
+                        {{ form.la_taxe }}
+                        <small class="form-text text-danger">{{ form.la_taxe.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.la_monnai.id_for_label }}">Monnaie</label>
+                        {{ form.la_monnai }}
+                        <small class="form-text text-danger">{{ form.la_monnai.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 10 : Délais -->
+                    <div class="form-group">
+                        <label for="{{ form.delais_estimatif_execut_livrai.id_for_label }}">Délais estimatif d'exécution (jours)</label>
+                        {{ form.delais_estimatif_execut_livrai }}
+                        <small class="form-text text-danger">{{ form.delais_estimatif_execut_livrai.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.delais_execution_livraison.id_for_label }}">Délais d'exécution (jours)</label>
+                        {{ form.delais_execution_livraison }}
+                        <small class="form-text text-danger">{{ form.delais_execution_livraison.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 11 : Documents 1 -->
+                    <div class="form-group">
+                        <label for="{{ form.dossier_consultation.id_for_label }}">Dossier de consultation</label>
+                        {{ form.dossier_consultation }}
+                        <small class="form-text text-danger">{{ form.dossier_consultation.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.pv_ouverture.id_for_label }}">PV d'ouverture</label>
+                        {{ form.pv_ouverture }}
+                        <small class="form-text text-danger">{{ form.pv_ouverture.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 12 : Documents 2 -->
+                    <div class="form-group">
+                        <label for="{{ form.pv_attribution_prov_marche.id_for_label }}">PV attribution provisoire</label>
+                        {{ form.pv_attribution_prov_marche }}
+                        <small class="form-text text-danger">{{ form.pv_attribution_prov_marche.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.copie_du_contrat.id_for_label }}">Copie du contrat</label>
+                        {{ form.copie_du_contrat }}
+                        <small class="form-text text-danger">{{ form.copie_du_contrat.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 13 : Documents 3 -->
+                    <div class="form-group">
+                        <label for="{{ form.lettre_invitation.id_for_label }}">Lettre d'invitation</label>
+                        {{ form.lettre_invitation }}
+                        <small class="form-text text-danger">{{ form.lettre_invitation.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.lettre_de_prolongation.id_for_label }}">Lettre de prolongation</label>
+                        {{ form.lettre_de_prolongation }}
+                        <small class="form-text text-danger">{{ form.lettre_de_prolongation.errors }}</small>
+                    </div>
+                    
+                    <!-- Paire 14 : Divers -->
+                    <div class="form-group">
+                        <label for="{{ form.recours.id_for_label }}">Recours</label>
+                        {{ form.recours }}
+                        <small class="form-text text-danger">{{ form.recours.errors }}</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.date_install_equip.id_for_label }}">Date d'installation de l'équipement</label>
+                        {{ form.date_install_equip }}
+                        <small class="form-text text-danger">{{ form.date_install_equip.errors }}</small>
+                    </div>
+                </div>
+                <!-- Bouton de soumission -->
+                <button type="submit" class="btn-ajouter btn-primary">Ajouter</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPopup = null;
+
+    function openPopup(popupId) {
+        currentPopup = document.getElementById(popupId);
+        currentPopup.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCurrentPopup() {
+        if (currentPopup) {
+            currentPopup.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentPopup = null;
+        }
+    }
+
+    // Ouverture du popup d'ajout
+    document.getElementById('openPopup').addEventListener('click', () => {
+        openPopup('addContratPopup');
+    });
+
+    // Fermeture au clic sur le bouton ×
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', closeCurrentPopup);
+    });
+
+    // Fermeture au clic extérieur
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('popup')) {
+            closeCurrentPopup();
+        }
+    });
+
+    // Fermeture avec la touche ESC
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeCurrentPopup();
+        }
+    });
+
+    // Initialisation au chargement
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.popup').forEach(popup => {
+            popup.style.display = 'none';
+        });
+    });
+</script>

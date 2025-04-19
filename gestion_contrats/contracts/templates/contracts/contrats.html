@@ -1,8 +1,179 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Page 2 - Contrats{% endblock %}
+{% block title %}Liste des Contrats{% endblock %}
 
 {% block content %}
-    <h2>Bienvenue sur la page des contrats</h2>
-    <p>Voici la liste des contrats.</p>
-{% endblock %}
+    <h2>Liste des Contrats</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Intitulé</th>
+                    <th>Type</th>
+                    <th>Référence</th>
+                    <th>Contractant</th>
+                    <th>Montant (DA)</th>
+                    <th>Date signature</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if contrats %}
+                    {% for contrat in contrats %}
+                    <tr>
+                        <td>{{ contrat.intitul }}</td>
+                        <td>{{ contrat.get_type_du_contrat_display }}</td>
+                        <td>{{ contrat.reference_du_contrat }}</td>
+                        <td>{{ contrat.id_contractant }}</td>
+                        <td>{{ contrat.montant_contrat_da }}</td>
+                        <td>{{ contrat.date_reel_sign_cont }}</td>
+                        <td class="actions">
+                            <a href="#" class="icon-btn" onclick="openDetailsContratPopup({{ contrat.id }})">
+                                <i class="fa-solid fa-eye"></i>
+                                <span class="tooltip">Détails</span>
+                            </a>
+                            <a href="#" class="icon-btn" onclick="openEditContratPopup({{ contrat.id }})">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span class="tooltip">Modifier</span>
+                            </a>
+                            <a href="#" class="icon-btn" onclick="openDeleteContratPopup({{ contrat.id }})">
+                                <i class="fa-solid fa-trash"></i>
+                                <span class="tooltip">Supprimer</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucun contrat trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <button id="openPopup" class="btn btn-ajouter">Ajouter un Contrat</button>    <!-- Pop-up pour les détails -->
+    {% include 'contracts/detail_contrat_popup.html' %}
+
+    <!-- Pop-up pour la modification -->
+    {% include 'contracts/modifier_contrat_popup.html' %}
+
+    <!-- Popup pour supprimer un contrat -->
+    {% include 'contracts/supprimer_contrat_popup.html' %}
+
+    <!-- Popup pour ajouter un contrat -->
+    {% include 'contracts/ajouter_contrat_popup.html' %}
+
+    <script>
+        // Initialisation des popups au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            // Masquer tous les popups au démarrage
+            document.querySelectorAll('.popup').forEach(popup => {
+                popup.style.display = 'none';
+            });
+    
+            // Gestionnaire pour le bouton Ajouter
+            const addButton = document.getElementById('openPopup');
+            if(addButton) {
+                addButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('addContratPopup').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+        });
+        // Gestion générique des popups
+        function closePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            if(popup) {
+                popup.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+    
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('popup')) {
+                closePopup(event.target.id);
+            }
+        });
+    
+        // Détails Contrat
+        function openDetailsContratPopup(contratId) {
+            fetch(`/contrats/details/${contratId}/`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Erreur réseau");
+                    return response.json();
+                })
+                .then(data => {
+                    const contentContainer = document.querySelector('#detailsContratPopup .form-grid');
+                    contentContainer.innerHTML = '';
+    
+                    for (const [field, value] of Object.entries(data)) {
+                        const formGroup = document.createElement('div');
+                        formGroup.classList.add('form-group');
+    
+                        formGroup.innerHTML = `
+                            <label>${field.replace(/_/g, ' ').toUpperCase()}</label>
+                            <input type="text" 
+                                value="${value || ''}" 
+                                readonly
+                                class="readonly-field">
+                        `;
+    
+                        contentContainer.appendChild(formGroup);
+                    }
+    
+                    document.getElementById('detailsContratPopup').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("Erreur lors du chargement des détails");
+                });
+        }
+    
+        // Modification Contrat
+        function openEditContratPopup(contratId) {
+            fetch(`/contrats/modifier/${contratId}/`)
+                .then(response => response.text())
+                .then(data => {
+                    const container = document.getElementById('editFormContratContent');
+                    container.innerHTML = data;
+                    document.getElementById('editContratForm').action = `/contrats/modifier/${contratId}/`;
+                    document.getElementById('editContratPopup').style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+        }
+    
+        // Suppression Contrat
+        let contratIdToDelete = null;
+    
+        function openDeleteContratPopup(contratId) {
+            contratIdToDelete = contratId;
+            const popup = document.getElementById('deleteContratPopup');
+    
+            fetch(`/contrats/supprimer/${contratId}/`, {
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('nomContrat').textContent = data.contrat;
+                popup.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Erreur lors du chargement du contrat");
+            });
+        }
+    
+        // Gestion ESC pour tous les popups
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.popup').forEach(popup => {
+                    if(popup.style.display === 'flex') closePopup(popup.id);
+                });
+            }
+        });
+    </script>
+    {% endblock %}

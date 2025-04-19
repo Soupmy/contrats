@@ -1,0 +1,76 @@
+<div id="deleteContratPopup" class="popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeDeleteContratPopup()">&times;</span>
+        <div class="popup-body text-center">
+            <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+            <h2 class="popup-title">Confirmer la suppression</h2>
+            
+            <div class="confirmation-message">
+                <p>Êtes-vous sûr de vouloir supprimer définitivement :</p>
+                <div class="contrat-name" id="nomContrat"></div>
+                <p class="text-muted">Cette action ne peut être annulée</p>
+            </div>
+
+            <form id='deleteContratForm' method="post" class="confirmation-actions">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="DELETE">
+                <div class="button-group">
+                    <button type="button" class="btn btn-neutral" onclick="closeDeleteContratPopup()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash-can"></i>
+                        Supprimer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestionnaire de fermeture
+        function closeDeleteContratPopup() {
+            document.getElementById('deleteContratPopup').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    
+        // Gestionnaire de soumission
+        document.getElementById('deleteContratForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const contratId = contratIdToDelete;
+    
+            fetch(`/contrats/supprimer/${contratId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({
+                    '_method': 'DELETE'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Erreur lors de la suppression');
+                }
+            });
+        });
+    
+        // Fermeture avec ESC
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') {
+                closeDeleteContratPopup();
+            }
+        });
+    });
+    
+    // Initialisation au chargement
+    window.onload = function() {
+        document.getElementById('deleteContratPopup').style.display = 'none';
+    }
+    </script>

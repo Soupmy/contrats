@@ -1,3 +1,4 @@
+
 from django.db import models
 from fournisseurs.models import JuridiqueFournisseur
 from django.db import models
@@ -83,3 +84,4 @@ class Contrat(models.Model):
 
     def __str__(self):
         return f"Contrat {self.reference_du_contrat} - {self.intitul}"
+    

@@ -1,0 +1,56 @@
+{% load custom_filters %}
+
+<div id="editContratPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closeEditContratPopup()">&times;</span>
+        <h2>Modifier le Contrat</h2>
+        <div class="popup-body">
+            <form id="editContratForm" method="post" class="form-popup">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+            
+                <div class="form-grid" id="editFormContratContent">
+                    <!-- Sera remplacé par le formulaire chargé dynamiquement -->
+                </div>
+            
+                <button type="submit" class="btn-ajouter btn-primary">Enregistrer</button>
+            </form>            
+        </div>        
+    </div>
+</div>
+
+<script>
+    function closeEditContratPopup() {
+        document.getElementById('editContratPopup').style.display = 'none';
+    }
+
+    document.getElementById('editContratForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST', // Django interprétera PUT via _method
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload(); // Recharger la page après modification
+            } else {
+                alert("Erreur lors de la modification !");
+            }
+        });
+    });
+    
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            closePopup(btn.closest('.popup').id);
+        });
+    });
+    
+    // La fonction openEditContratPopup est définie dans le fichier parent
+</script>
