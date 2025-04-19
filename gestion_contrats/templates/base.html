@@ -21,7 +21,7 @@
     </button>
 
     <!-- Ajout du panneau de notifications -->
-    {% include 'notifications/notification_panel.html' %}
+    {% include 'notifications/notification_panel.html' %} 
     <div class="main-content">
         {% block content %}
 
@@ -41,7 +41,7 @@
 
             // Fermer le panneau quand on clique ailleurs
             document.addEventListener('click', function(e) {
-                if (!panel.contains(e.target) {
+                if (!panel.contains(e.target)) {
                     panel.style.display = 'none';
                 }
             });
